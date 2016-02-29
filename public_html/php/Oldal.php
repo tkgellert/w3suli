@@ -682,6 +682,7 @@
         $HTMLFormkod  .= getOldalForm();
         $HTMLFormkod  .= getOldalTorolForm();
         $HTMLFormkod  .= getOldalKepForm();
+        $HTMLFormkod  .= getOModeratorForm();  //// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         $HTMLFormkod  .= "</div>\n\n";
       }
       if ($_SESSION['AktFelhasznalo'.'FSzint']>0)  {  // FSzint-et növelni, ha működik a felhasználókezelés!!!

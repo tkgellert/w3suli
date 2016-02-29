@@ -35,9 +35,9 @@ function initRoot() {
 function setBelepes() {
     global $MySqliLink, $oURL; 
     $ErrorStr = '';		
-    $FFNev    = '';
-    $FJelszo  = '';
-    initRoot();		
+    
+    initRoot();	
+    	
     if (($_SESSION['AktFelhasznalo'.'FSzint']>0) &&  (isset($_POST['submitBelepesForm']))){
         if (isset($_POST['FFNev']))         {$FFNev    = test_post($_POST['FFNev']);}
         if (isset($_POST['FJelszo']))       {$FJelszo  = test_post($_POST['FJelszo']); }
@@ -55,7 +55,7 @@ function setBelepes() {
                 $row = mysqli_fetch_array($result);
                 mysqli_free_result($result);
 				
-                $_SESSION['AktFelhasznalo'.'id']    = $row['id']; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                $_SESSION['AktFelhasznalo'.'id']      = $row['id']; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 $_SESSION['AktFelhasznalo'.'FNev']    = $row['FNev'];
                 $_SESSION['AktFelhasznalo'.'FFNev']   = $row['FFNev'];
                 $_SESSION['AktFelhasznalo'.'FJelszo'] = $row['FJelszo'];
@@ -324,20 +324,20 @@ function getUjFelhasznaloForm() {
             }
             else 
             {
-                $ErrClassFFNev = '';
-		if (strpos($_SESSION['ErrorStr'],'Err005')!==false) {
-                    $ErrClassFFNev = ' Error '; 
-                    $ErrorStr .= 'Túl hosszú a felhasználónév! ';
-		}
-		if (strpos($_SESSION['ErrorStr'],'Err006')!==false) {
-                    $ErrClassFFNev = ' Error '; 
-                    $ErrorStr .= 'Túl rövid a felhasználónév! ';
-		}
-		if (strpos($_SESSION['ErrorStr'],'Err007')!==false) {
-                    $ErrClassFFNev = ' Error '; 
-                    $ErrorStr .= 'Létezik már a megadott felhasználó! ';
-		}
-	    }
+				$ErrClassFFNev = '';
+				if (strpos($_SESSION['ErrorStr'],'Err005')!==false) {
+							$ErrClassFFNev = ' Error '; 
+							$ErrorStr .= 'Túl hosszú a felhasználónév! ';
+				}
+				if (strpos($_SESSION['ErrorStr'],'Err006')!==false) {
+							$ErrClassFFNev = ' Error '; 
+							$ErrorStr .= 'Túl rövid a felhasználónév! ';
+				}
+				if (strpos($_SESSION['ErrorStr'],'Err007')!==false) {
+							$ErrClassFFNev = ' Error '; 
+							$ErrorStr .= 'Létezik már a megadott felhasználó! ';
+				}
+			}
        
             //Jelszó ellenőrzése       
             $ErrClassFJelszo = '';       
@@ -349,7 +349,7 @@ function getUjFelhasznaloForm() {
             else 
             {
                 $ErrClassFJelszo = ''; 
-		if (strpos($_SESSION['ErrorStr'],'Err008')!==false) {
+				if (strpos($_SESSION['ErrorStr'],'Err008')!==false) {
                     $ErrClassFJelszo = ' Error '; 
                     $ErrorStr .= 'Túl hosszú a jelszó! ';
                 }
@@ -375,46 +375,46 @@ function getUjFelhasznaloForm() {
                 }
             }       
             if($_SESSION['ErrorStr']==''){$ErrorStr='Sikeres regisztráció!';} 
-	}	
+		}	
 		
         // ============== FORM ÖSSZEÁLLÍTÁSA ===================== 
-	$HTMLkod .= "<div id='divUjFelhasznaloForm' >\n";
+		$HTMLkod .= "<div id='divUjFelhasznaloForm' >\n";
         if ($ErrorStr!='') {
             $HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}    
 
-	$HTMLkod .= "<form action='?f0=regisztracio' method='post' id='formUjFelhasznaloForm'>\n";
+		$HTMLkod .= "<form action='?f0=regisztracio' method='post' id='formUjFelhasznaloForm'>\n";
           	   
         //Felhasználó neve    
         $HTMLkod .= "<p class='pFNev'><label for='FNev' class='label_1'>A felhasználó neve:</label><br>\n ";
-	$HTMLkod .= "<input type='text' name='FNev' class='$ErrClassFNev' id='FNev' placeholder='Felhasználó neve' value='$FNev' size='20'></p>\n"; 
+		$HTMLkod .= "<input type='text' name='FNev' class='$ErrClassFNev' id='FNev' placeholder='Felhasználó neve' value='$FNev' size='20'></p>\n"; 
 	
-	//Felhasználó felhasználói neve    
+		//Felhasználó felhasználói neve    
         $HTMLkod .= "<p class='pFFNev'><label for='FFNev' class='label_1'>Felhasználónév: </label><br>\n ";
-	$HTMLkod .= "<input type='text' name='FFNev' class='$ErrClassFFNev' id='FFNev' placeholder='Felhasználónév' value='$FFNev' size='20'></p>\n"; 
+		$HTMLkod .= "<input type='text' name='FFNev' class='$ErrClassFFNev' id='FFNev' placeholder='Felhasználónév' value='$FFNev' size='20'></p>\n"; 
 	   
         //Jelszó    
         $HTMLkod .= "<p class='pJelszo1'><label for='FJelszo' class='label_1'>Jelszó: </label><br>\n ";
-	$HTMLkod .= "<input type='password' name='FJelszo' class='$ErrClassFJelszo' id='FJelszo' placeholder='Jelszó' value='$FJelszo' size='20'></p>\n"; 
+		$HTMLkod .= "<input type='password' name='FJelszo' class='$ErrClassFJelszo' id='FJelszo' placeholder='Jelszó' value='$FJelszo' size='20'></p>\n"; 
 	
-	//Jelszó újra    
+		//Jelszó újra    
         $HTMLkod .= "<p class='pJelszo2'><label for='FJelszo2' class='label_1'>Jelszó újra: </label><br>\n ";
-	$HTMLkod .= "<input type='password' name='FJelszo2' class='$ErrClassFJelszo' id='FJelszo2' placeholder='Jelszó újra' value='$FJelszo2' size='20'></p>\n"; 
+		$HTMLkod .= "<input type='password' name='FJelszo2' class='$ErrClassFJelszo' id='FJelszo2' placeholder='Jelszó újra' value='$FJelszo2' size='20'></p>\n"; 
 	   
         //Email cím
-	$HTMLkod .= "<p class='pFEmail'><label for='FEmail' class='label_1'>E-mail cím: </label><br>\n ";
-	$HTMLkod .= "<input type='text' name='FEmail' class='$ErrClassFEmail' id='FEmail' placeholder='E-mail cím' value='$FEmail' size='30'></p>\n"; 
+		$HTMLkod .= "<p class='pFEmail'><label for='FEmail' class='label_1'>E-mail cím: </label><br>\n ";
+		$HTMLkod .= "<input type='text' name='FEmail' class='$ErrClassFEmail' id='FEmail' placeholder='E-mail cím' value='$FEmail' size='30'></p>\n"; 
 	   
-	//Email cím újra
-	$HTMLkod .= "<p class='pFEmail2'><label for='FEmail2' class='label_1'>E-mail cím újra: </label><br>\n ";
-	$HTMLkod .= "<input type='text' name='FEmail2' class='$ErrClassFEmail' id='FEmail2' placeholder='E-mail cím újra' value='$FEmail2' size='30'></p>\n";   
+		//Email cím újra
+		$HTMLkod .= "<p class='pFEmail2'><label for='FEmail2' class='label_1'>E-mail cím újra: </label><br>\n ";
+		$HTMLkod .= "<input type='text' name='FEmail2' class='$ErrClassFEmail' id='FEmail2' placeholder='E-mail cím újra' value='$FEmail2' size='30'></p>\n";   
 	   
         //Felhasználói szint
-	$HTMLkod .= "<p class='pFSzint'><label for='FSzint' class='label_1'>Felhasználói szint: </label><br>\n ";
+		$HTMLkod .= "<p class='pFSzint'><label for='FSzint' class='label_1'>Felhasználói szint: </label><br>\n ";
         $HTMLkod .= "<input type='number' name='FSzint' id='FSzint' min='0' max='5' step='1' value='$FSzint'></p>\n";  
     
         //Felhasználó szerepe    
         $HTMLkod .= "<p class='pFSzerep'><label for='FSzerep' class='label_1'>Felhasználó szerepe: </label><br>\n ";
-	$HTMLkod .= "<input type='text' name='FSzerep' id='FSzerep' placeholder='Felhasználó szerepe' value='$FSzerep' size='20'></p>\n"; 
+		$HTMLkod .= "<input type='text' name='FSzerep' id='FSzerep' placeholder='Felhasználó szerepe' value='$FSzerep' size='20'></p>\n"; 
 	
         //Felhasználó csoportba rendelése
 
@@ -447,9 +447,7 @@ function setFelhasznalo() {
         global $MySqliLink;
         $ErrorStr = '';
 
-
         $ErrorStr .= setFelhasznaloCsoportValaszt();
-
         $ErrorStr .= setFelhasznaloValaszt();
 
         if (($_SESSION['AktFelhasznalo'.'FSzint']>0) &&  (isset($_POST['submitFelhasznaloForm']))){ 			
@@ -548,7 +546,6 @@ function getFelhasznaloForm() {
         if($_SESSION['SzerkFCsoport']>0)
         {
         $HTMLkod .= getFelhasznaloValasztForm();
-	
         
         if($_SESSION['SzerkFelhasznalo']>0)
         {
@@ -561,10 +558,10 @@ function getFelhasznaloForm() {
             $HTMLkod  .= "  <input name='chFelhasznaloForm'   id='chFelhasznaloTorolForm'  value='chFelhasznaloTorolForm'  type='radio' $checked >\n";
             $HTMLkod  .= "  <label for='chFelhasznaloTorolForm'   class='chLabel'    id='labelFelhasznaloTorolForm'>Felhasználó törlése</label>\n \n";
         } else {            
-            $HTMLkod  .= "  <input name='chFelhasznaloForm'   id='chFelhasznaloTorolForm'  value='chFelhasznaloTorolForm'  type='radio' checked >\n";
-	    $HTMLkod  .= "  <label for='chFelhasznaloTorolForm'   class='chLabel'    id='labelFelhasznaloTorolForm'>Felhasználó törlése</label>\n \n";
-        }		        
-			  
+            $HTMLkod  .= "  <input name='chFelhasznaloForm'   id='chFelhasznaloTorolForm'  value='chFelhasznaloTorolForm'  type='radio' >\n";
+			$HTMLkod  .= "  <label for='chFelhasznaloTorolForm'   class='chLabel'    id='labelFelhasznaloTorolForm'>Felhasználó törlése</label>\n \n";
+        }	
+        
         if($_SESSION['SzerkFelhasznalo']>0)
         {
             $FId = $_SESSION['SzerkFelhasznalo']; //echo "<h1>HÚÚÚÚÚÚÚÚÚÚÚ</h1>";
@@ -695,9 +692,9 @@ function getFelhasznaloForm() {
             $HTMLkod .= "<input type='submit' name='submitFelhasznaloForm' value='Módosítás'><br>\n";        
             $HTMLkod .= "</form>\n";            
             $HTMLkod .= "</div>\n";   
-            
-            $HTMLkod.=getFelhasznaloTorolForm();
+
             }
+            $HTMLkod .=getFelhasznaloTorolForm();
         }	  
     }
     return $HTMLkod;	
@@ -833,7 +830,10 @@ function setFelhasznaloCsoportValaszt()
 				$SelectStr   = "SELECT id FROM FelhasznaloCsoport WHERE CsNev='$CsNev' LIMIT 1";  //echo "<h1>$SelectStr</h1>";
 				$result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sCsV 02 ");
 				$row         = mysqli_fetch_array($result);  mysqli_free_result($result);
-
+				
+				if($_SESSION['SzerkFCsoport'] != $row['id']){$_SESSION['SzerkFelhasznalo']=0;}
+				
+				
 				$_SESSION['SzerkFCsoport'] = $row['id'];
 			}
 		}

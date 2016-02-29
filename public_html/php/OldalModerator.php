@@ -14,7 +14,12 @@ $OModeratorok['CSid'] = -1;
 
 
     function getOModeratorForm() {
-        trigger_error('Not Implemented!', E_USER_WARNING);
+		$HTMLkod = "";
+		
+		$HTMLkod .= getFelhasznaloCsoportValasztForm();
+		
+		
+        return $HTMLkod;
     }
 
 
