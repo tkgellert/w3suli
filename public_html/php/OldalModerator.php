@@ -7,25 +7,186 @@ $OModeratorok['Oid']  = 0;
 $OModeratorok['Fid']  = -1;
 $OModeratorok['CSid'] = -1;
 
+function initModerator() {
+    trigger_error('Not Implemented!', E_USER_WARNING); 
+}       
+function getOModeratorCsoportValasztForm(){
+    global $MySqliLink, $Aktoldal;
+    $OUrl = $Aktoldal['OUrl'];
+    $HTMLkod  = '';
+    $ErrorStr = ''; 
 
-    function setOModerator() {
-        trigger_error('Not Implemented!', E_USER_WARNING);
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
+        $CsNev    = '';
+        
+        $HTMLkod .= "<div id='divOModeratorCsoportValaszt' >\n";
+        if ($ErrorStr!='') {
+        $HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
+
+        $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModeratorCsoportValaszt'>\n";
+
+        //Felhasználó kiválasztása a lenyíló listából
+        $HTMLkod .= "<select name='selectOModeratorCsoportValaszt' size='1'>";
+
+        $SelectStr   = "SELECT id, CsNev FROM FelhasznaloCsoport";  //echo "<h1>$SelectStr</h1>";
+        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMCsV 01 ");
+        while($row = mysqli_fetch_array($result))
+        {
+            $CsNev = $row['CsNev'];
+            if($_SESSION['SzerkMCsoport'] == $row['id']){$Select = " selected ";}else{$Select = "";}
+
+            $HTMLkod.="<option value='$CsNev' $Select >$CsNev</option>";
+        }	
+        //Submit
+        $HTMLkod .= "<input type='submit' name='submitOModeratorCsoportValaszt' value='Kiválaszt'><br>\n";        
+        $HTMLkod .= "</form>\n";            
+        $HTMLkod .= "</div>\n";    
+    }     
+    return $HTMLkod;   
+}
+function setOModeratorCsoportValaszt(){
+    global $MySqliLink;
+    $ErrorStr = '';
+
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
+        $CsNev     = '';
+
+        // ============== FORM ELKÜLDÖTT ADATAINAK VIZSGÁLATA ===================== 
+        if (isset($_POST['submitOModeratorCsoportValaszt'])) {
+
+            if (isset($_POST['selectOModeratorCsoportValaszt'])) {$CsNev = test_post($_POST['selectOModeratorCsoportValaszt']);}      
+
+            if($CsNev!='')
+            {
+                $SelectStr   = "SELECT id FROM FelhasznaloCsoport WHERE CsNev='$CsNev' LIMIT 1";  //echo "<h1>$SelectStr</h1>";
+                $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMCsV 02 ");
+                $row         = mysqli_fetch_array($result);  mysqli_free_result($result);
+
+                if($_SESSION['SzerkMCsoport'] != $row['id']){$_SESSION['SzerkModerator']=0;}
+
+                $_SESSION['SzerkMCsoport'] = $row['id'];
+            }
+        }
     }
+    return $ErrorStr;  
+}
+function getOModeratorValasztForm(){
+    global $MySqliLink, $Aktoldal;
+    $OUrl = $Aktoldal['OUrl'];
+    $HTMLkod  = '';
+    $ErrorStr = ''; 
+    
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
+        $HTMLkod .= "<div id='divOModeratorValaszt' >\n";
+        if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
 
+        $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModeratorValaszt'>\n";
+        $CsId = $_SESSION['SzerkMCsoport'];
 
-    function getOModeratorForm() {
-		$HTMLkod = "";
-		
-		$HTMLkod .= getFelhasznaloCsoportValasztForm();
-		
-		
-        return $HTMLkod;
+        $SelectStr ="SELECT F.id, F.FNev, F.FFNev
+                    FROM Felhasznalok AS F
+                    LEFT JOIN FCsoportTagok AS FCsT
+                    ON FCsT.Fid= F.id 
+                    WHERE FCsT.Csid=$CsId";
+        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gMod 01 ");
+        $rowDB  = mysqli_num_rows($result);
+        $i = 0;
+        while ($row = mysqli_fetch_array($result)) {
+            $FNev = $row['FNev'];
+        //  $FFNev = $row['FFNev'];
+            $id = $row['id'];
+            
+            //$HTMLkod.="<input type='checkbox' name='$FFNev' id='$FFNev' value='$FFNev'>";
+
+            $SelectStr ="SELECT * FROM OModeratorok AS OM
+                        LEFT JOIN Oldalak AS O
+                        ON OM.Oid=O.id 
+                        WHERE OM.Fid=$id";
+
+            $result2      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gMod 02 ");
+            $rowDB_2  = mysqli_num_rows($result2);
+            if($rowDB_2>0){$checked="checked";}
+            
+            $HTMLkod .= "<input type='checkbox' name='MValaszt_$i' id='MValaszt_$i' $checked>\n";
+            $HTMLkod .= "<label for='MValaszt_$i' class='label_1'>$FNev</label>\n ";
+
+            //id
+            $HTMLkod .= "<input type='hidden' name='MValasztId_$i' id='MValasztId_$i' value='$id'><br>\n";
+            $i++;
+        }
+        
+        $HTMLkod .= "<input type='hidden' name='MValasztDB' id='MValasztDB' value='$rowDB'>\n";
+        
+        //Submit
+        $HTMLkod .= "<input type='submit' name='submitOModeratorValaszt' value='Kiválaszt'><br>\n";        
+        $HTMLkod .= "</form>\n";            
+        $HTMLkod .= "</div>\n";
     }
+    return $HTMLkod;  
+}
+function setOModeratorValaszt(){
+    global $MySqliLink, $Aktoldal;
+    $OUrl = $Aktoldal['OUrl'];
+    $ErrorStr = '';
 
-
-    function getOModeratorTeszt() {
-        trigger_error('Not Implemented!', E_USER_WARNING);
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {
+        if (isset($_POST['submitOModeratorValaszt'])) {
+            $MValasztDB = test_post($_POST['MValasztDB']);
+            for ($i = 0; $i < $MValasztDB; $i++){
+                $id = test_post($_POST["MValasztId_$i"]);
+                if ($_POST["MValasztId_$i"]){
+                    $SelectStr = "SELECT * FROM OModeratorok WHERE Fid=$id";
+                    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMod 01 ");
+                    $rowDB  = mysqli_num_rows($result);
+                    mysql_free_result($result);
+                    
+                    if($rowDB<1){
+                        $InsertIntoStr = "INSERT INTO OModeratorok VALUES ('','$OUrl','$id','0')";
+                        $result     = mysqli_query($MySqliLink,$InsertIntoStr) OR die("Hiba sMod 02 ");
+                    }     
+                }
+            }
+        }
     }
+    return $ErrorStr;     
+}
+
+function setOModerator() {
+    $ErrorStr = '';
+
+    $ErrorStr .= setOModeratorCsoportValaszt();
+    $ErrorStr .= setOModeratorValaszt();
+
+    return $ErrorStr;
+}
+
+function getOModeratorForm() {
+    global $MySqliLink;
+    $HTMLkod  = '';
+    $ErrorStr = ''; 
+    
+    $HTMLkod .= "<div id='divOModeratorForm' >\n";
+    if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
+
+    $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModerator'>\n";
+    
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
+
+        $HTMLkod .= getOModeratorCsoportValasztForm();
+        
+        if($_SESSION['SzerkMCsoport']>0)
+        {
+        $HTMLkod .= getOModeratorValasztForm();
+        }
+    }
+    $HTMLkod .= "</div>";
+    return $HTMLkod;
+}
+
+
+function getOModeratorTeszt() {
+    trigger_error('Not Implemented!', E_USER_WARNING);
+}
 
 
 

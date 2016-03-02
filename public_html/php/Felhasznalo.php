@@ -724,7 +724,6 @@ function getFelhasznaloValasztForm() {
         $FFNev    = '';
         $CsId     = '';
         
-        //Jelszó ellenőrzése
         $HTMLkod .= "<div id='divFelhasznaloValaszt' >\n";
         if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
 
@@ -767,9 +766,8 @@ function getFelhasznaloCsoportValasztForm()
     $ErrorStr = ''; 
 
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
-        
         $CsNev    = '';
-        //Jelszó ellenőrzése
+
         $HTMLkod .= "<div id='divCsoportValaszt2' >\n";
         if ($ErrorStr!='') {
         $HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
