@@ -73,6 +73,7 @@ function setOModeratorCsoportValaszt(){
 function getOModeratorValasztForm(){
     global $MySqliLink, $Aktoldal;
     $OUrl = $Aktoldal['OUrl'];
+    $Oid  = $Aktoldal['id'];
     $HTMLkod  = '';
     $ErrorStr = ''; 
     
@@ -99,13 +100,15 @@ function getOModeratorValasztForm(){
             //$HTMLkod.="<input type='checkbox' name='$FFNev' id='$FFNev' value='$FFNev'>";
 
             $SelectStr ="SELECT * FROM OModeratorok AS OM
-                        LEFT JOIN Oldalak AS O
+                        JOIN Oldalak AS O
                         ON OM.Oid=O.id 
-                        WHERE OM.Fid=$id";
+                        WHERE OM.Fid=$id AND OM.Oid=$Oid";
 
             $result2      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gMod 02 ");
+            mysqli_free_result(result2);
             $rowDB_2  = mysqli_num_rows($result2);
-            if($rowDB_2>0){$checked="checked";}
+            
+            if($rowDB_2>0){$checked="checked";}else{$checked="";}
             
             $HTMLkod .= "<input type='checkbox' name='MValaszt_$i' id='MValaszt_$i' $checked>\n";
             $HTMLkod .= "<label for='MValaszt_$i' class='label_1'>$FNev</label>\n ";
@@ -116,7 +119,6 @@ function getOModeratorValasztForm(){
         }
         
         $HTMLkod .= "<input type='hidden' name='MValasztDB' id='MValasztDB' value='$rowDB'>\n";
-        
         //Submit
         $HTMLkod .= "<input type='submit' name='submitOModeratorValaszt' value='Kiválaszt'><br>\n";        
         $HTMLkod .= "</form>\n";            
@@ -126,7 +128,8 @@ function getOModeratorValasztForm(){
 }
 function setOModeratorValaszt(){
     global $MySqliLink, $Aktoldal;
-    $OUrl = $Aktoldal['OUrl'];
+    $Oid = $Aktoldal['id'];
+    
     $ErrorStr = '';
 
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {
@@ -134,16 +137,30 @@ function setOModeratorValaszt(){
             $MValasztDB = test_post($_POST['MValasztDB']);
             for ($i = 0; $i < $MValasztDB; $i++){
                 $id = test_post($_POST["MValasztId_$i"]);
-                if ($_POST["MValasztId_$i"]){
-                    $SelectStr = "SELECT * FROM OModeratorok WHERE Fid=$id";
+                if ($_POST["MValaszt_$i"]){
+                    $SelectStr = "SELECT * FROM OModeratorok WHERE Fid=$id AND OId=$Oid "; //echo $SelectStr."<br>";
                     $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMod 01 ");
                     $rowDB  = mysqli_num_rows($result);
                     mysql_free_result($result);
                     
                     if($rowDB<1){
-                        $InsertIntoStr = "INSERT INTO OModeratorok VALUES ('','$OUrl','$id','0')";
+                        $InsertIntoStr = "INSERT INTO OModeratorok VALUES ('','$Oid','$id','0')";
+                        //echo $InsertIntoStr."<br>";
                         $result     = mysqli_query($MySqliLink,$InsertIntoStr) OR die("Hiba sMod 02 ");
                     }     
+                }
+                else
+                {
+                    $SelectStr = "SELECT * FROM OModeratorok WHERE Fid=$id AND OId=$Oid "; //echo $SelectStr."<br>";
+                    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMod 01 ");
+                    $rowDB  = mysqli_num_rows($result);
+                    mysql_free_result($result);
+                    
+                    if($rowDB>0){
+                        $DeleteStr = "DELETE FROM OModeratorok WHERE Fid = $id AND Oid = $Oid";
+                        //echo $DeleteStr."<br>";
+                        $result    = mysqli_query($MySqliLink, $DeleteStr) OR die("Hiba sMod 03 ");
+                    }  
                 }
             }
         }
