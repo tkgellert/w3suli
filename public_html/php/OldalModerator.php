@@ -9,12 +9,44 @@ $OModeratorok['CSid'] = -1;
 
 function initModerator() {
     trigger_error('Not Implemented!', E_USER_WARNING); 
-}       
-function getOModeratorCsoportValasztForm(){
+} 
+function setOModerator() {
+    $ErrorStr = '';
+
+    $ErrorStr .= setOModeratorCsoportValaszt();
+    $ErrorStr .= setOModeratorValaszt();
+
+    return $ErrorStr;
+}
+
+function getOModeratorForm() {
     global $MySqliLink, $Aktoldal;
     $OUrl = $Aktoldal['OUrl'];
     $HTMLkod  = '';
     $ErrorStr = ''; 
+    
+    $HTMLkod .= "<div id='divOModeratorForm' >\n";
+    if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
+
+    $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModerator'>\n";
+    
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
+
+        $HTMLkod .= getOModeratorCsoportValasztForm();
+        
+        if($_SESSION['SzerkMCsoport']>0)
+        {
+        $HTMLkod .= getOModeratorValasztForm();
+        }
+    }
+    $HTMLkod .= "</form></div>";
+    return $HTMLkod;
+}
+
+function getOModeratorCsoportValasztForm(){
+    global $MySqliLink, $Aktoldal;
+    $OUrl = $Aktoldal['OUrl'];
+    $HTMLkod  = '';
 
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
         $CsNev    = '';
@@ -25,7 +57,8 @@ function getOModeratorCsoportValasztForm(){
 
         $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModeratorCsoportValaszt'>\n";
 
-        //Felhasználó kiválasztása a lenyíló listából
+        //Felhasználó(k) kiválasztása
+        
         $HTMLkod .= "<select name='selectOModeratorCsoportValaszt' size='1'>";
 
         $SelectStr   = "SELECT id, CsNev FROM FelhasznaloCsoport";  //echo "<h1>$SelectStr</h1>";
@@ -49,12 +82,14 @@ function setOModeratorCsoportValaszt(){
     $ErrorStr = '';
 
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
+        
         $CsNev     = '';
 
         // ============== FORM ELKÜLDÖTT ADATAINAK VIZSGÁLATA ===================== 
         if (isset($_POST['submitOModeratorCsoportValaszt'])) {
 
-            if (isset($_POST['selectOModeratorCsoportValaszt'])) {$CsNev = test_post($_POST['selectOModeratorCsoportValaszt']);}      
+            if (isset($_POST['selectOModeratorCsoportValaszt'])) 
+            {$CsNev = test_post($_POST['selectOModeratorCsoportValaszt']);}      
 
             if($CsNev!='')
             {
@@ -62,6 +97,8 @@ function setOModeratorCsoportValaszt(){
                 $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sMCsV 02 ");
                 $row         = mysqli_fetch_array($result);  mysqli_free_result($result);
 
+                //Ha kiválasztottunk egy másik csoportot, akkor újratöltjük a felhasználókat
+                
                 if($_SESSION['SzerkMCsoport'] != $row['id']){$_SESSION['SzerkModerator']=0;}
 
                 $_SESSION['SzerkMCsoport'] = $row['id'];
@@ -94,11 +131,10 @@ function getOModeratorValasztForm(){
         $i = 0;
         while ($row = mysqli_fetch_array($result)) {
             $FNev = $row['FNev'];
-        //  $FFNev = $row['FFNev'];
             $id = $row['id'];
             
-            //$HTMLkod.="<input type='checkbox' name='$FFNev' id='$FFNev' value='$FFNev'>";
-
+            //Lekérdezzük, van-e már az oldalon moderátor a csoporton belül
+            
             $SelectStr ="SELECT * FROM OModeratorok AS OM
                         JOIN Oldalak AS O
                         ON OM.Oid=O.id 
@@ -167,39 +203,6 @@ function setOModeratorValaszt(){
     }
     return $ErrorStr;     
 }
-
-function setOModerator() {
-    $ErrorStr = '';
-
-    $ErrorStr .= setOModeratorCsoportValaszt();
-    $ErrorStr .= setOModeratorValaszt();
-
-    return $ErrorStr;
-}
-
-function getOModeratorForm() {
-    global $MySqliLink;
-    $HTMLkod  = '';
-    $ErrorStr = ''; 
-    
-    $HTMLkod .= "<div id='divOModeratorForm' >\n";
-    if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
-
-    $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModerator'>\n";
-    
-    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
-
-        $HTMLkod .= getOModeratorCsoportValasztForm();
-        
-        if($_SESSION['SzerkMCsoport']>0)
-        {
-        $HTMLkod .= getOModeratorValasztForm();
-        }
-    }
-    $HTMLkod .= "</div>";
-    return $HTMLkod;
-}
-
 
 function getOModeratorTeszt() {
     trigger_error('Not Implemented!', E_USER_WARNING);
