@@ -78,6 +78,8 @@ function getOModeratorForm() {
         
         if($_SESSION['SzerkMCsoport']>0)
         {
+            $HTMLkod .= "<div id='divOModeratorValasztForm' >\n";
+            
             $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOModeratorValaszt'>\n";
             $CsId = $_SESSION['SzerkMCsoport'];
 
@@ -117,7 +119,8 @@ function getOModeratorForm() {
             $HTMLkod .= "<input type='hidden' name='MValasztDB' id='MValasztDB' value='$rowDB'>\n";
             //Submit
             $HTMLkod .= "<input type='submit' name='submitOModeratorValaszt' value='Kiválaszt'><br>\n";        
-            $HTMLkod .= "</form>\n";            
+            $HTMLkod .= "</form>\n";    
+            $HTMLkod .= "</div>\n";
         }
         $HTMLkod .= "</div>\n";
     }
