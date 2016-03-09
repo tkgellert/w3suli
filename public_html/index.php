@@ -80,7 +80,7 @@
   getOldalData($oURL);  
   
   //A MODERÁTOR STÁTUSZ ELLENŐRZÉSE
-  if (getOModeratorTeszt($Aktoldal['id']) > 0) {$_SESSION['AktFelhasznalo'.'FSzint'] =  3;}
+  if (getOModeratorTeszt($Aktoldal['id']) > 0 && $_SESSION['AktFelhasznalo'.'FSzint'] < 4) {$_SESSION['AktFelhasznalo'.'FSzint'] =  3;}
   
   
   

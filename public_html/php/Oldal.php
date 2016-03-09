@@ -657,6 +657,7 @@
       if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {  // FSzint-et növelni, ha működik a felhasználókezelés!!! 
         if(isset($_POST['submitOldalTorolForm'])    || isset($_POST['submitOldalTorolVegleges']) ||
            isset($_POST['submitOldalForm'])         || isset($_POST['submitUjOldalForm']) || 
+           isset($_POST['submitOModeratorCsoportValaszt'])         || isset($_POST['submitOModeratorValaszt']) ||     
            isset($_POST['submit_KepekFeltoltForm']) || isset($_POST['submitOldalKepForm']))
 			{$checked = " checked ";} else {$checked = "";}  
         $HTMLFormkod  .= "  <input name='chFormkod'   id='chFormkod'   value='chFormkod'   type='checkbox' $checked>\n";
