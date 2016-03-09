@@ -37,7 +37,7 @@
   }  
   
   $_SESSION['ErrorStr']   = '';
-  
+  if ($_SESSION['AktFelhasznalo'.'FSzint']==3) {$_SESSION['AktFelhasznalo'.'FSzint']=2;} // A moderátor oldalanként változik
   if (isset($_GET['f0'])) { $oURL = $_GET['f0'];} else { $oURL = '';}  
   
   //ADATBÁZIS MEGNYITÁSA
@@ -79,10 +79,20 @@
   //AZ AKTUÁLIS OLDAL ADATAINAK BEOLVASÁSA
   getOldalData($oURL);  
   
+  
   //A MODERÁTOR STÁTUSZ ELLENŐRZÉSE
-  if (getOModeratorTeszt($Aktoldal['id']) > 0 && $_SESSION['AktFelhasznalo'.'FSzint'] < 4) {$_SESSION['AktFelhasznalo'.'FSzint'] =  3;}
   
+ // echo "<h1>".$_SESSION['AktFelhasznalo'.'FSzint']."</h1>";
+  //if (getOModeratorTeszt($Aktoldal['id']) > 1 && $_SESSION['AktFelhasznalo'.'FSzint'] < 4) 
+  if ($_SESSION['AktFelhasznalo'.'FSzint'] == 2) 
+  {
+    if (getOModeratorTeszt($Aktoldal['id']) > 0)    // Csak akkor érdekes, ha bejelentkezett, de nem rendszergazda     
+    {
+        $_SESSION['AktFelhasznalo'.'FSzint'] =  3;
+    }
+  }
   
+//echo "<h1>".$_SESSION['AktFelhasznalo'.'FSzint']."</h1>";  
   
   //FELHASZNÁLÓI CSOPORTADATOK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjFCsoport();  

@@ -86,7 +86,7 @@ function getBelepesForm() {
     $HTMLkod  = '';
     $ErrorStr = ''; 
 		
-    if ($_SESSION['AktFelhasznalo'.'FSzint']==1)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!					
+    if ($_SESSION['AktFelhasznalo'.'FSzint']==1	)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!					
         $FFNev    = '';
         $FJelszo  = '';
 
@@ -169,23 +169,9 @@ function setKilepes() {
         if ($rowDB > 0) {
             $row  = mysqli_fetch_array($result);
             $oURL = $row['OUrl'];
-        } else { $ErrorStr.= " Err001 ";}
+        }
     }		
     return $ErrorStr;
-}
-
-function getKilepesForm() {		
-    $ErrorStr = '';
-    $HTMLkod  = '';		
-    if (strpos($_SESSION['ErrorStr'],'Err001')!==false) 
-    {
-        $ErrorStr .= 'Sikeres kijelentkezés! ';
-    }
-        
-    if ($ErrorStr!='') {
-    $HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
-		
-    return $HTMLkod;
 }   
     
 // ============= Új felhasználó ============     

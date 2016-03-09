@@ -184,7 +184,7 @@ function getOModeratorTeszt($Oid) {
     $rowDB  = mysqli_num_rows($result);
     mysql_free_result($result);
                     
-    if($rowDB<1){$ModeratorOK=1;}
+    if($rowDB>0){$ModeratorOK=1;}
 
     return $ModeratorOK;
 }
