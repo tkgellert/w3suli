@@ -81,8 +81,7 @@
   
   
   //A MODERÁTOR STÁTUSZ ELLENŐRZÉSE
-  
- // echo "<h1>".$_SESSION['AktFelhasznalo'.'FSzint']."</h1>";
+
   //if (getOModeratorTeszt($Aktoldal['id']) > 1 && $_SESSION['AktFelhasznalo'.'FSzint'] < 4) 
   if ($_SESSION['AktFelhasznalo'.'FSzint'] == 2) 
   {
@@ -120,7 +119,6 @@
   
   //KIEGÉSZÍTŐ TARTALOM MÓDOSÍTÁSA
  $_SESSION['ErrorStr']   .= setKiegT();
- 
  $_SESSION['ErrorStr']   .= setFoMenu();
  $_SESSION['ErrorStr']   .= setMenuPlusz();
 ?>

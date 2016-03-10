@@ -86,7 +86,7 @@ function getBelepesForm() {
     $HTMLkod  = '';
     $ErrorStr = ''; 
 		
-    if ($_SESSION['AktFelhasznalo'.'FSzint']==1	)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!					
+    if ($_SESSION['AktFelhasznalo'.'FSzint']==1)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!					
         $FFNev    = '';
         $FJelszo  = '';
 
@@ -305,20 +305,20 @@ function getUjFelhasznaloForm() {
             }
             else 
             {
-				$ErrClassFFNev = '';
-				if (strpos($_SESSION['ErrorStr'],'Err005')!==false) {
-							$ErrClassFFNev = ' Error '; 
-							$ErrorStr .= 'Túl hosszú a felhasználónév! ';
-				}
-				if (strpos($_SESSION['ErrorStr'],'Err006')!==false) {
-							$ErrClassFFNev = ' Error '; 
-							$ErrorStr .= 'Túl rövid a felhasználónév! ';
-				}
-				if (strpos($_SESSION['ErrorStr'],'Err007')!==false) {
-							$ErrClassFFNev = ' Error '; 
-							$ErrorStr .= 'Létezik már a megadott felhasználó! ';
-				}
-			}
+                $ErrClassFFNev = '';
+                if (strpos($_SESSION['ErrorStr'],'Err005')!==false) {
+                    $ErrClassFFNev = ' Error '; 
+                    $ErrorStr .= 'Túl hosszú a felhasználónév! ';
+                }
+                if (strpos($_SESSION['ErrorStr'],'Err006')!==false) {
+                    $ErrClassFFNev = ' Error '; 
+                    $ErrorStr .= 'Túl rövid a felhasználónév! ';
+                }
+                if (strpos($_SESSION['ErrorStr'],'Err007')!==false) {
+                    $ErrClassFFNev = ' Error '; 
+                    $ErrorStr .= 'Létezik már a megadott felhasználó! ';
+                }
+            }
        
             //Jelszó ellenőrzése       
             $ErrClassFJelszo = '';       
