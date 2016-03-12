@@ -36,23 +36,23 @@ function setBelepes() {
     initRoot();	
     	
     if (($_SESSION['AktFelhasznalo'.'FSzint']>0) &&  (isset($_POST['submitBelepesForm']))){
-        if (isset($_POST['FFNev']))         {$FFNev    = test_post($_POST['FFNev']);}
-        if (isset($_POST['FJelszo']))       {$FJelszo  = test_post($_POST['FJelszo']); }
+        if (isset($_POST['FFNev']))   {$FFNev    = test_post($_POST['FFNev']);}
+        if (isset($_POST['FJelszo'])) {$FJelszo  = test_post($_POST['FJelszo']);}
 			
         //----------------- HIBAKEZELÉS -------------------------			
         if($FFNev  ==''){$ErrorStr .= ' Err001 '; } //nincs felhasználónév megadva
         if($FJelszo==''){$ErrorStr .= ' Err002 '; } //nincs jelszó megadva
         else {$FJelszo = md5($FJelszo);}            //Megj. md5()-öt akkor használjuk, ha érkezett jelszó
                         
-        if ($ErrorStr=='') {                        //Megj. Az adatbázisból csak akkor olvasunk, ha jók a feltételben szereplő adatok
-            $SelectStr   = "SELECT * FROM Felhasznalok WHERE FFNev='$FFNev' AND FJelszo='$FJelszo' ";  //echo "<h1>$SelectStr</h1>";
-            $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sBelepes 01 ");
+        if ($ErrorStr=='') { //Megj. Az adatbázisból csak akkor olvasunk, ha jók a feltételben szereplő adatok
+            $SelectStr   = "SELECT * FROM Felhasznalok WHERE FFNev='$FFNev' AND FJelszo='$FJelszo' ";
+            $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sBe 01 ");
             $rowDB       = mysqli_num_rows($result); 
             if ($rowDB > 0) {
                 $row = mysqli_fetch_array($result);
                 mysqli_free_result($result);
 				
-                $_SESSION['AktFelhasznalo'.'id']      = $row['id']; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                $_SESSION['AktFelhasznalo'.'id']      = $row['id'];
                 $_SESSION['AktFelhasznalo'.'FNev']    = $row['FNev'];
                 $_SESSION['AktFelhasznalo'.'FFNev']   = $row['FFNev'];
                 $_SESSION['AktFelhasznalo'.'FJelszo'] = $row['FJelszo'];
@@ -74,7 +74,9 @@ function setBelepes() {
                     mysqli_free_result($result);
                     $oURL = $row['OUrl'];
                 }
-            } else {
+            } 
+            else 
+            {
                 $ErrorStr .= ' Err003 '; //hibás felhasználónév vagy jelszó
             } 
         }
@@ -86,18 +88,18 @@ function getBelepesForm() {
     $HTMLkod  = '';
     $ErrorStr = ''; 
 		
-    if ($_SESSION['AktFelhasznalo'.'FSzint']==1)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!					
+    if ($_SESSION['AktFelhasznalo'.'FSzint']==1){ // FSzint-et növelni, ha működik a felhasználókezelés!!!					
         $FFNev    = '';
         $FJelszo  = '';
 
         if (isset($_POST['submitBelepesForm'])) {
             if (isset($_POST['FFNev']))   {$FFNev   = test_post($_POST['FFNev']);}   // Megj. test_post()
             if (isset($_POST['FJelszo'])) {$FJelszo = test_post($_POST['FJelszo']);} 
-		   
-            //Felhasználó felhasználónevének ellenőrzése		   
+		   		   
             $ErrClassFFNev   = '';
             $ErrClassFJelszo = ''; 
-			
+            
+            //Felhasználó felhasználónevének ellenőrzése	
             if (strpos($_SESSION['ErrorStr'],'Err001')!==false) 
             {
                 $ErrClassFFNev = ' Error '; 
@@ -110,8 +112,7 @@ function getBelepesForm() {
                 $ErrClassFJelszo = ' Error '; 
                 $ErrorStr       .= 'Nem adott meg jelszót! ';
             } 
-
-		   
+ 
             //Felhasználónév és jelszó együttes vizsgálata		   
             if (strpos($_SESSION['ErrorStr'],'Err003')!==false) 
             {
@@ -119,8 +120,6 @@ function getBelepesForm() {
                 $ErrClassFJelszo = ' Error '; 
                 $ErrorStr .= 'Hibás felhasználónév vagy jelszó! ';
             }
-		   
-            if($_SESSION['ErrorStr']==''){$ErrorStr='Sikeres bejelentkezés!';} 
         }	
 
         // ============== FORM ÖSSZEÁLLÍTÁSA ===================== 
@@ -142,7 +141,7 @@ function getBelepesForm() {
         $HTMLkod .= "</form>\n";            
         $HTMLkod .= "</div>\n";        
     }
-    return $HTMLkod;  //Mej. Mindig legyen visszatérési érték!
+    return $HTMLkod;  //Megj. Mindig legyen visszatérési érték!
 }
 
 function setKilepes() {	
@@ -202,22 +201,22 @@ function setUjFelhasznalo() {
 			
         //----------------- HIBAKEZELÉS -------------------------			
         if($FFNev==''){$ErrorStr .= ' Err004 '; }              //nincs felhasználónév
-        else {                                                 // Megj. az $FFNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb
-            if (strlen($FFNev)>40) { $ErrorStr .= ' Err005 ';}   //túl hosszú felhasználónév
-            if (strlen($FFNev)<6)  { $ErrorStr .= ' Err006 ';}   //túl rövid felhasználónév
+        else { // Megj. az $FFNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb
+            if (strlen($FFNev)>40) { $ErrorStr .= ' Err005 ';} //túl hosszú felhasználónév
+            if (strlen($FFNev)<6)  { $ErrorStr .= ' Err006 ';} //túl rövid felhasználónév
         }
 			
-        if ($ErrorStr=='') {                                   // Megj. az $FFNev-et csak akkor használjuk legérdezésben, ha nincs vele gond
+        if ($ErrorStr=='') { // Megj. az $FFNev-et csak akkor használjuk lekérdezésben, ha nincs vele gond
             $SelectStr   = "SELECT * FROM Felhasznalok WHERE FFNev='$FFNev'"; 
             $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sUF 01 ");
             $rowDB       = mysqli_num_rows($result); mysqli_free_result($result);
-            if ($rowDB > 0) { $ErrorStr .= ' Err007,';}          //van ilyen néven már felhasználó   
+            if ($rowDB > 0) { $ErrorStr .= ' Err007,';} //van ilyen néven már felhasználó   
         }
                         
         if ($FNev=='') {$ErrorStr  .= ' Err001 '; }            //nincs név
-        else {                                                 // Megj. az $FNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb 
-            if (strlen($FNev)>40)  { $ErrorStr .= ' Err002 ';}   //túl hosszú a név
-            if (strlen($FNev)<6)   { $ErrorStr .= ' Err003 ';}   //túl rövid a név
+        else { // Megj. az $FNev hosszát csak akkor ellenőrizzük, ha 0-nál nagyobb 
+            if (strlen($FNev)>40)  { $ErrorStr .= ' Err002 ';} //túl hosszú a név
+            if (strlen($FNev)<6)   { $ErrorStr .= ' Err003 ';} //túl rövid a név
         }
            
         if (strlen($FJelszo)>20) { $ErrorStr .= ' Err008 ';}   //túl hosszú jelszó
@@ -226,25 +225,21 @@ function setUjFelhasznalo() {
 			
         if($FEmail=='')          { $ErrorStr .= ' Err011 ';}   //nincs email cím megadva			
         if($FEmail!=$FEmail2)    { $ErrorStr .= ' Err012 ';}   //nem egyeznek az email címek
-        
-        
-			
+	
         // ---------------- ADATOK TÁROLÁSA ---------------------
         if($ErrorStr ==''){
-            $FJelszo = md5($FJelszo);                          //Megj. Ha a bejelentkezésnél md5()-öt használunk, akkor itt is
+            $FJelszo = md5($FJelszo); //Megj. Ha a bejelentkezésnél md5()-öt használunk, akkor itt is
             $InsertIntoStr = "INSERT INTO Felhasznalok VALUES ('', '$FNev','$FFNev','$FJelszo','$FEmail',$FSzint,'$FSzerep','$FKep')";
             if (!mysqli_query($MySqliLink,$InsertIntoStr)) {die("Hiba UF 01 "); }    
             
             $SelectStr   = "SELECT id FROM FelhasznaloCsoport WHERE CSNev='$FCsoport'"; //echo $SelectStr;
-            $result = mysqli_query($MySqliLink,$SelectStr); if (!mysqli_query($MySqliLink,$SelectStr)) {die("Hiba UF 02 "); }   
+            $result = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba UF 02 ");  
             $row  = mysqli_fetch_array($result);
             
             $CsId = $row['id'];
-             
-             
-            $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('', LAST_INSERT_ID(),$CsId,0)";
-            if (!mysqli_query($MySqliLink,$InsertIntoStr)) {die("Hiba UF 03 "); }   
             
+            $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('', LAST_INSERT_ID(),$CsId,0)";
+            if (!mysqli_query($MySqliLink,$InsertIntoStr)) {die("Hiba UF 03 "); }      
         } 		
     }	
     return $ErrorStr;
@@ -269,11 +264,11 @@ function getUjFelhasznaloForm() {
           
 	// ============== FORM ELKÜLDÖTT ADATAINAK VIZSGÁLATA ===================== 
         if (isset($_POST['submitUjFelhasznaloForm'])) {
-            if (isset($_POST['FNev'])) {$FNev       = test_post($_POST['FNev']);}      // Megj. test_post() használata !!!
-            if (isset($_POST['FFNev'])) {$FFNev     = test_post($_POST['FFNev']);}
-            if (isset($_POST['FEmail'])) {$FEmail   = test_post($_POST['FEmail']);} 
+            if (isset($_POST['FNev']))    {$FNev    = test_post($_POST['FNev']);}
+            if (isset($_POST['FFNev']))   {$FFNev   = test_post($_POST['FFNev']);}
+            if (isset($_POST['FEmail']))  {$FEmail  = test_post($_POST['FEmail']);} 
             if (isset($_POST['FEmail2'])) {$FEmail2 = test_post($_POST['FEmail2']);}
-            if (isset($_POST['FSzint'])) {$FSzint   = test_post($_POST['FSzint']);} 
+            if (isset($_POST['FSzint']))  {$FSzint  = test_post($_POST['FSzint']);} 
             if (isset($_POST['FSzerep'])) {$FSzerep = test_post($_POST['FSzerep']);}
 	   
             //Felhasználó nevének ellenőrzése	  
@@ -330,7 +325,7 @@ function getUjFelhasznaloForm() {
             else 
             {
                 $ErrClassFJelszo = ''; 
-				if (strpos($_SESSION['ErrorStr'],'Err008')!==false) {
+                if (strpos($_SESSION['ErrorStr'],'Err008')!==false) {
                     $ErrClassFJelszo = ' Error '; 
                     $ErrorStr .= 'Túl hosszú a jelszó! ';
                 }
@@ -435,20 +430,24 @@ function setFelhasznalo() {
         if (isset($_POST['FSzint'])) {$FSzint  = test_post($_POST['FSzint']);} 
         if (isset($_POST['FSzerep'])){$FSzerep = test_post($_POST['FSzerep']);} 
         //if (isset($_POST['FKep'])) {$FKep = test_post($_POST['FKep']);} 
-        if (isset($_POST['selectCsoportValaszt3'])) {$FCsoport = $_POST['selectCsoportValaszt3'];}
 
         $FId = $_SESSION['SzerkFelhasznalo'];
 
         //----------------- HIBAKEZELÉS -------------------------		
 
+        if ($FNev=='') {$ErrorStr  .= ' Err001 '; }            //nincs név
+        else { // Megj. az $FNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb 
+            if (strlen($FNev)>40)  { $ErrorStr .= ' Err002 ';} //túl hosszú a név
+            if (strlen($FNev)<6)   { $ErrorStr .= ' Err003 ';} //túl rövid a név
+        }
+        
         if($FFNev==''){$ErrorStr .= ' Err004 '; }              //nincs felhasználónév
-        else {                                                 // Megj. az $FFNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb
-            if (strlen($FFNev)>40) { $ErrorStr .= ' Err005 ';}   //túl hosszú felhasználónév
-            if (strlen($FFNev)<6)  { $ErrorStr .= ' Err006 ';}   //túl rövid felhasználónév
+        else { // Megj. az $FFNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb
+            if (strlen($FFNev)>40) { $ErrorStr .= ' Err005 ';} //túl hosszú felhasználónév
+            if (strlen($FFNev)<6)  { $ErrorStr .= ' Err006 ';} //túl rövid felhasználónév
         }
 
-
-        if ($ErrorStr=='') {                                   // Megj. az $FFNev-et csak akkor használjuk lekérdezésben, ha nincs vele gond
+        if ($ErrorStr=='') { // Megj. az $FFNev-et csak akkor használjuk lekérdezésben, ha nincs vele gond
             $SelectStr   = "SELECT id FROM Felhasznalok WHERE FFNev='$FFNev'"; 
             $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sUF 01 ");
             $rowDB       = mysqli_num_rows($result); 
@@ -456,49 +455,55 @@ function setFelhasznalo() {
                 $row = mysqli_fetch_array($result);
                 if($_SESSION['SzerkFelhasznalo']!=$row['id'])
                 {
-                    $ErrorStr .= ' Err007,';  //echo "<h1>".$_SESSION['SzerkFelhasznalo']." - ".$row['id']."</h1>";
+                    $ErrorStr .= ' Err007,';  //van ilyen néven már felhasználó
                 }
                 mysqli_free_result($result);
-            }          //van ilyen néven már felhasználó   
+            }             
         }  
-
-        if ($FNev=='') {$ErrorStr  .= ' Err001 '; }            //nincs név
-        else {                                                 // Megj. az $FNev hosszát csak akkor ellenőrizük, ha 0-nál nagyobb 
-            if (strlen($FNev)>40)  { $ErrorStr .= ' Err002 ';}   //túl hosszú a név
-            if (strlen($FNev)<6)   { $ErrorStr .= ' Err003 ';}   //túl rövid a név
-        }
-
-        if($FEmail=='')          { $ErrorStr .= ' Err008 ';}   //nincs email cím megadva			
+        if($FEmail==''){ $ErrorStr .= ' Err008 ';}   //nincs email cím megadva			
 
         // ---------------- ADATOK TÁROLÁSA ---------------------
         if($ErrorStr ==''){
+            
+            //Felhasználói adatok tárolása
+            
             $FJelszo = md5($FJelszo);  
             $UpdateStr = "UPDATE Felhasznalok SET FNev='$FNev', FFNev='$FFNev', FEmail='$FEmail', FSzint=$FSzint, FSzerep='$FSzerep' WHERE id='$FId'";    
             if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba sFV 04 "); }   
 
-            $SelectStr   = "SELECT id FROM FelhasznaloCsoport WHERE CSNev='$FCsoport'"; //echo $SelectStr;
-            $result = mysqli_query($MySqliLink,$SelectStr); if (!mysqli_query($MySqliLink,$SelectStr)) {die("Hiba sFV 05 "); }   
-            $row  = mysqli_fetch_array($result);
+            //Csoportok tárolása
+            
+            $FCsoportDB = test_post($_POST['FCsoportDB']);
+            for ($i = 0; $i < $FCsoportDB; $i++){
+                $id = test_post($_POST["FCsoportId_$i"]);
+                if ($_POST["FCsoport_$i"]){
+                    $SelectStr = "SELECT * FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId"; //echo $SelectStr."<br>";
+                    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 05 ");
+                    $rowDB     = mysqli_num_rows($result);
+                    mysql_free_result($result);
 
-            $CsId = $row['id'];
+                    if($rowDB<1){
+                        $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('',$FId,$id,'1')";
+                        //echo $InsertIntoStr."<br>";
+                        $result     = mysqli_query($MySqliLink,$InsertIntoStr) OR die("Hiba sFV 06 ");
+                    }     
+                }
+                else
+                {
+                    $SelectStr = "SELECT * FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId"; //echo $SelectStr."<br>";
+                    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 07 ");
+                    $rowDB     = mysqli_num_rows($result);
+                    mysql_free_result($result);
 
-
-            $SelectStr   = "SELECT * FROM FCsoportTagok WHERE KapcsTip=0 AND Fid=$FId"; //echo $SelectStr;
-            $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 06 ");
-            $rowDB       = mysqli_num_rows($result); 
-            if ($rowDB > 0)
-            {
-                $UpdateStr = "UPDATE FCsoportTagok SET Csid=$CsId WHERE Fid=$FId"; //echo "<h1>$UpdateStr</h1>";
-                if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba sFV 07 "); }
+                    if($rowDB>0){
+                        $DeleteStr = "DELETE FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId";
+                        //echo $DeleteStr."<br>";
+                        $result    = mysqli_query($MySqliLink, $DeleteStr) OR die("Hiba sFV 08 ");
+                    }  
+                }
             }
-            else
-            {
-                $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('', $FId, $CsId, 0)"; //echo "<h1>$InsertIntoStr</h1>";
-                if (!mysqli_query($MySqliLink,$InsertIntoStr)) {die("Hiba sFV 08 "); }  
-            }         
         } 
     }
-    //echo "<h1>ErrorStr: $ErrorStr</h1>";
     return $ErrorStr;
 }
 
@@ -540,7 +545,7 @@ function getFelhasznaloForm() {
         
             if($_SESSION['SzerkFelhasznalo']>0)
             {
-                $FId = $_SESSION['SzerkFelhasznalo']; //echo "<h1>HÚÚÚÚÚÚÚÚÚÚÚ</h1>";
+                $FId = $_SESSION['SzerkFelhasznalo'];
 
                 $SelectStr = "SELECT * FROM Felhasznalok WHERE id='$FId' LIMIT 1"; //echo $SelectStr;
                 $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 03 ");
@@ -565,8 +570,7 @@ function getFelhasznaloForm() {
                     if (isset($_POST['FSzint']))  {$FSzint  = test_post($_POST['FSzint']);} 
                     if (isset($_POST['FSzerep'])) {$FSzerep = test_post($_POST['FSzerep']);} 
                     //if (isset($_POST['FKep'])) {$FKep = test_post($_POST['FKep']);} 
-					
-					
+							
                     //Felhasználó nevének ellenőrzése                	   
                     if (strpos($_SESSION['ErrorStr'],'Err001')!==false) 
                     {
@@ -647,18 +651,33 @@ function getFelhasznaloForm() {
 
                 //Felhasználó csoportba rendelése
 
-                $HTMLkod .= "<p class='pFCsoport'><label for='selectCsoportValaszt3' class='label_1'>Felhasználó csoporthoz rendelése: </label><br>\n ";
-                $HTMLkod .= "<select name='selectCsoportValaszt3' id='selectCsoportValaszt3' size='1'>";
+                $HTMLkod .= "<p class='pFCsoport'>Felhasználó csoporthoz rendelése:<br>\n ";
 
-                $SelectStr   = "SELECT id, CsNev FROM FelhasznaloCsoport";  //echo "<h1>$SelectStr</h1>";
-                $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sCsV 10 ");
-                while($row = mysqli_fetch_array($result))
-                {
+                $SelectStr ="SELECT * FROM FelhasznaloCsoport";
+                $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gFCs 01 ");
+                $rowDB     = mysqli_num_rows($result);
+
+                $i = 0;
+                while ($row = mysqli_fetch_array($result)) {
+                    $id = $row['id'];
                     $CsNev = $row['CsNev'];
-                    if($_POST['selectCsoportValaszt3'] == $row['CsNev']){$Select = " selected ";}else{$Select = "";}
 
-                    $HTMLkod.="<option value='$CsNev' $Select >$CsNev</option>";
-                }	
+                    //Lekérdezzük, hogy mely csoportokhoz tartozik már a felhasználó
+
+                    $SelectStr = "SELECT * FROM FCsoportTagok WHERE Fid=$FId AND CSid=$id";
+                    $result2   = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gFCs 02 ");
+                    mysqli_free_result(result2);
+                    $rowDB_2  = mysqli_num_rows($result2);
+
+                    if($rowDB_2>0){$checked="checked";}else{$checked="";}
+
+                    $HTMLkod .= "<input type='checkbox' name='FCsoport_$i' id='FCsoport_$i' $checked>\n";
+                    $HTMLkod .= "<label for='FCsoport_$i' class='label_1'>$CsNev</label>\n ";
+                    //id
+                    $HTMLkod .= "<input type='hidden' name='FCsoportId_$i' id='FCsoportId_$i' value='$id'><br>\n";
+                    $i++;
+                }
+                $HTMLkod .= "<input type='hidden' name='FCsoportDB' id='FCsoportDB' value='$rowDB'>\n";	
 
                 //Submit
                 $HTMLkod .= "<input type='submit' name='submitFelhasznaloForm' value='Módosítás'><br>\n";        
@@ -708,7 +727,7 @@ function getFelhasznaloValasztForm() {
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
 
         $FFNev    = '';
-        $CsId     = '';
+	$CsId = $_SESSION['SzerkFCsoport'];
         
         $HTMLkod .= "<div id='divFelhasznaloValaszt' >\n";
         if ($ErrorStr!='') {$HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
@@ -718,23 +737,18 @@ function getFelhasznaloValasztForm() {
         //Felhasználó kiválasztása a lenyíló listából
         $HTMLkod .= "<select name='selectFelhasznaloValaszt' size='1'>";
 
-	$CsId = $_SESSION['SzerkFCsoport'];
-
 	$SelectStr ="SELECT F.id, F.FNev
                     FROM Felhasznalok AS F
                     LEFT JOIN FCsoportTagok AS FCsT
                     ON FCsT.Fid= F.id 
                     WHERE FCsT.Csid=$CsId";//echo "<h1>$SelectStr</h1>";
-        
-
-        //$SelectStr   = "SELECT id, FNev FROM Felhasznalok";  //echo "<h1>$SelectStr</h1>";
-        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 01 ");
+        $result = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 01 ");
         while($row = mysqli_fetch_array($result))
         {
             $FNev = $row['FNev'];
-            if($_SESSION['SzerkFelhasznalo'] == $row['id']){$Select = " selected ";}else{$Select = "";}
+            if($_SESSION['SzerkFelhasznalo'] == $row['id']){$select = " selected ";}else{$select = "";}
 
-            $HTMLkod.="<option value='$FNev' $Select >$FNev</option>";
+            $HTMLkod.="<option value='$FNev' $select >$FNev</option>";
         }	
         //Submit
         $HTMLkod .= "<input type='submit' name='submitFelhasznaloValaszt' value='Kiválaszt'><br>\n";        
@@ -743,7 +757,6 @@ function getFelhasznaloValasztForm() {
     }       
     return $HTMLkod;
 }   
-
 
 function getFelhasznaloCsoportValasztForm()
 {
@@ -758,9 +771,8 @@ function getFelhasznaloCsoportValasztForm()
         if ($ErrorStr!='') {
         $HTMLkod .= "<p class='ErrorStr'>$ErrorStr</p>";}
 
-        $HTMLkod .= "<form action='?f0=adatmodositas' method='post' id='formCsoportValaszt2'>\n";
-
         //Felhasználó kiválasztása a lenyíló listából
+        $HTMLkod .= "<form action='?f0=adatmodositas' method='post' id='formCsoportValaszt2'>\n";
         $HTMLkod .= "<select name='selectCsoportValaszt' size='1'>";
 
         $SelectStr   = "SELECT id, CsNev FROM FelhasznaloCsoport";  //echo "<h1>$SelectStr</h1>";
@@ -800,7 +812,6 @@ function setFelhasznaloCsoportValaszt()
 
                 if($_SESSION['SzerkFCsoport'] != $row['id']){$_SESSION['SzerkFelhasznalo']=0;}
 
-
                 $_SESSION['SzerkFCsoport'] = $row['id'];
             }
         }
@@ -823,9 +834,9 @@ function SetUjJelszo() {
         $FUJelszo2 = '';
         $FFNev     = $_SESSION['AktFelhasznalo'.'FFNev'];
         
-        if (isset($_POST['FRJelszo']))       {$FRJelszo  = test_post($_POST['FRJelszo']);}			
-        if (isset($_POST['FUJelszo']))       {$FUJelszo  = test_post($_POST['FUJelszo']);}
-        if (isset($_POST['FUJelszo2']))      {$FUJelszo2 = test_post($_POST['FUJelszo2']);}
+        if (isset($_POST['FRJelszo']))  {$FRJelszo  = test_post($_POST['FRJelszo']);}			
+        if (isset($_POST['FUJelszo']))  {$FUJelszo  = test_post($_POST['FUJelszo']);}
+        if (isset($_POST['FUJelszo2'])) {$FUJelszo2 = test_post($_POST['FUJelszo2']);}
 
         //----------------- HIBAKEZELÉS -------------------------
         if($FRJelszo == '')				{$ErrorStr .= ' Err001 ';}
@@ -845,12 +856,11 @@ function SetUjJelszo() {
 
         // ---------------- JELSZÓ MÓDOSÍTÁSA AZ ADATBÁZISBAN ---------------------
         if($ErrorStr ==''){
-                 $FUJelszo = md5($FUJelszo); 
-                 $UpdateStr = "UPDATE Felhasznalok SET FJelszo = '$FUJelszo' WHERE FFNev='$FFNev'"; // echo "<h1>$UpdateStr</h1>";
-                 if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba setUjJelszo 02 ");} 
-                 $ErrorStr .= ' Err007 ';              
+            $FUJelszo = md5($FUJelszo); 
+            $UpdateStr = "UPDATE Felhasznalok SET FJelszo = '$FUJelszo' WHERE FFNev='$FFNev'"; // echo "<h1>$UpdateStr</h1>";
+            if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba setUjJelszo 02 ");} 
+            $ErrorStr .= ' Err007 ';              
         } 
-
     }	
     return $ErrorStr;
 }
@@ -860,10 +870,11 @@ function getUjJelszoForm() {
     $ErrorStr = ''; 
 
     if ($_SESSION['AktFelhasznalo'.'FSzint']>0)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
-
-        //Jelszó ellenőrzése
         $ErrClassFRJelszo = ''; 
         $ErrClassFUJelszo = '';
+        
+        //Jelszó ellenőrzése
+        
         if (strpos($_SESSION['ErrorStr'],'Err001')!==false) 
         {
         $ErrClassFRJelszo = ' Error '; 
@@ -957,8 +968,7 @@ function setFelhasznaloTorol() {
     return $ErrorStr;
 }
 
-function getFelhasznaloTorolForm() {
-		
+function getFelhasznaloTorolForm() {	
     global $MySqliLink;
     $HTMLkod  = '';
     $ErrorStr = ''; 
@@ -972,7 +982,6 @@ function getFelhasznaloTorolForm() {
         $HTMLkod .= "<form action='?f0=adatmodositas' method='post' id='formFelhasznaloTorol'>\n";
         $CsId = $_SESSION['SzerkFCsoport'];
         
-        
         $SelectStr ="SELECT F.id, F.FNev, F.FFNev
                     FROM Felhasznalok AS F
                     LEFT JOIN FCsoportTagok AS FCsT
@@ -985,8 +994,6 @@ function getFelhasznaloTorolForm() {
             $FNev = $row['FNev'];
         //  $FFNev = $row['FFNev'];
             $id = $row['id'];
-            
-            //$HTMLkod.="<input type='checkbox' name='$FFNev' id='$FFNev' value='$FFNev'>";
 
             //Törlésre jelölés
             $HTMLkod .= "<input type='checkbox' name='FTorol_$i' id='FTorol_$i'>\n";
@@ -1004,7 +1011,7 @@ function getFelhasznaloTorolForm() {
         $HTMLkod .= "</form>\n";            
         $HTMLkod .= "</div>\n";
 	}
-	return $HTMLkod;    
+    return $HTMLkod;    
 }    
     
 // ============= Egy felhasználó adatainak lekérdezése============      
