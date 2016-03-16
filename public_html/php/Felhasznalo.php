@@ -67,7 +67,7 @@ function setBelepes() {
                 $ElozoID     = $_SESSION['ElozoOldalId'];
                 // Megj. Az előző ID alapján lekérjük a hozzátartozó $oURL-t, amely alapján az aktuális olda adatainak kezelése folyik 
                 $SelectStr   = "SELECT OUrl FROM Oldalak WHERE id=$ElozoID ";  //echo "<h1>$SelectStr</h1>";
-                $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sBelepes 01aa ");
+                $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sBe 01aa ");
                 $rowDB       = mysqli_num_rows($result); 
                 if ($rowDB > 0) {
                     $row  = mysqli_fetch_array($result);
@@ -402,7 +402,8 @@ function getUjFelhasznaloForm() {
             $CsNev = $row['CsNev'];
             if($_POST['selectCsoportValaszt2'] == $row['CsNev']){$Select = " selected ";}else{$Select = "";}
 
-            $HTMLkod.="<option value='$CsNev' $Select >$CsNev</option>";
+            $HTMLkod.="<option value='$CsNev' $Select >$CsNev</option>";            
+            
         }	
         //Submit
         $HTMLkod .= "</p>\n";
@@ -483,22 +484,46 @@ function setFelhasznalo() {
                     mysql_free_result($result);
 
                     if($rowDB<1){
-                        $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('',$FId,$id,'1')";
-                        //echo $InsertIntoStr."<br>";
+                        
+                        if((isset($_POST['FCsoportTip']))&&($_POST['FCsoportTip']=="FCsoportTip_".$i)){$FTip=0;}else{$FTip=1;}
+
+                        $InsertIntoStr = "INSERT INTO FCsoportTagok VALUES ('',$FId,$id,$FTip)";
                         $result     = mysqli_query($MySqliLink,$InsertIntoStr) OR die("Hiba sFV 06 ");
-                    }     
+                    } 
+                    else 
+                    {
+                        if((isset($_POST['FCsoportTip']))&&($_POST['FCsoportTip']=="FCsoportTip_".$i))
+                        {
+                            $UpdateStr = "UPDATE FCsoportTagok SET KapcsTip=0 WHERE CSid=$id AND Fid=$FId";
+                            $result     = mysqli_query($MySqliLink,$UpdateStr) OR die("Hiba sFV 07 ");
+                        }
+                        else
+                        {
+                            $UpdateStr = "UPDATE FCsoportTagok SET KapcsTip=1 WHERE CSid=$id AND Fid=$FId";
+                            $result     = mysqli_query($MySqliLink,$UpdateStr) OR die("Hiba sFV 08 ");
+                        }
+                    }    
                 }
                 else
                 {
                     $SelectStr = "SELECT * FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId"; //echo $SelectStr."<br>";
-                    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 07 ");
+                    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sFV 09 ");
                     $rowDB     = mysqli_num_rows($result);
+                    $row       = mysqli_fetch_array($result);
                     mysql_free_result($result);
 
                     if($rowDB>0){
-                        $DeleteStr = "DELETE FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId";
-                        //echo $DeleteStr."<br>";
-                        $result    = mysqli_query($MySqliLink, $DeleteStr) OR die("Hiba sFV 08 ");
+                        
+                        if($row['KapcsTip']!=0)
+                        {
+                            $DeleteStr = "DELETE FROM FCsoportTagok WHERE CSid=$id AND Fid=$FId";
+                            //echo $DeleteStr."<br>";
+                            $result    = mysqli_query($MySqliLink, $DeleteStr) OR die("Hiba sFV 10 ");
+                        }
+                        else
+                        {
+                            $ErrorStr.=" Err009 ";
+                        }
                     }  
                 }
             }
@@ -616,7 +641,13 @@ function getFelhasznaloForm() {
                     {
                         $ErrClassFEmail = ' Error '; 
                         $ErrorStr .= 'Nem adott meg e-mail címet! ';
-                    } 
+                    }
+                    
+                    //Csoporttagság vizsgálata                    
+                    if (strpos($_SESSION['ErrorStr'],'Err009')!==false) 
+                    {
+                        $ErrorStr .= 'Az alapcsoporthoz való tagság nem törölhető! ';
+                    }
                     
                     if($_SESSION['ErrorStr']==''){$ErrorStr='Sikeres módosítás!';} 
                 }	
@@ -666,16 +697,35 @@ function getFelhasznaloForm() {
 
                     $SelectStr = "SELECT * FROM FCsoportTagok WHERE Fid=$FId AND CSid=$id";
                     $result2   = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gFCs 02 ");
-                    mysqli_free_result(result2);
+                    
+                    $row_2 = mysqli_fetch_array($result2);
                     $rowDB_2  = mysqli_num_rows($result2);
 
+                    //Csoporttagság vizsgálata
+                    
                     if($rowDB_2>0){$checked="checked";}else{$checked="";}
 
                     $HTMLkod .= "<input type='checkbox' name='FCsoport_$i' id='FCsoport_$i' $checked>\n";
                     $HTMLkod .= "<label for='FCsoport_$i' class='label_1'>$CsNev</label>\n ";
-                    //id
-                    $HTMLkod .= "<input type='hidden' name='FCsoportId_$i' id='FCsoportId_$i' value='$id'><br>\n";
-                    $i++;
+
+                    $HTMLkod .= "<input type='hidden' name='FCsoportId_$i' id='FCsoportId_$i' value='$id'>\n";
+                    
+                    //Alapcsoport vizsgálata (csoporttagság esetén)                  
+                    
+                    if($rowDB_2>0 && $row_2['KapcsTip']==0)
+                    {
+                        $checked=" checked "; 
+                        $alapcsoport = "(alapcsoport)";
+                    }
+                    else
+                    {
+                        $checked="";
+                        $alapcsoport = "";
+                    }
+
+                    $HTMLkod.="<input type='radio' name='FCsoportTip' id='FCsoportTip_$i' value='FCsoportTip_$i' $checked>$alapcsoport\n<br>";
+
+                    $i++;  
                 }
                 $HTMLkod .= "<input type='hidden' name='FCsoportDB' id='FCsoportDB' value='$rowDB'>\n";	
 
@@ -843,7 +893,7 @@ function SetUjJelszo() {
         if(($FUJelszo == '') || ($FUJelszo2 == ''))	{$ErrorStr .= ' Err002 ';}
 
         $SelectStr   = "SELECT FJelszo FROM Felhasznalok WHERE FFNev='$FFNev'"; // echo "<h1>$SelectStr</h1>";
-        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba setUjJelszo 01 ");
+        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sUJ 01 ");
         $row         = mysqli_fetch_array($result); mysqli_free_result($result);
 
         $FRJelszo    = md5($FRJelszo); 
@@ -858,7 +908,7 @@ function SetUjJelszo() {
         if($ErrorStr ==''){
             $FUJelszo = md5($FUJelszo); 
             $UpdateStr = "UPDATE Felhasznalok SET FJelszo = '$FUJelszo' WHERE FFNev='$FFNev'"; // echo "<h1>$UpdateStr</h1>";
-            if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba setUjJelszo 02 ");} 
+            if (!mysqli_query($MySqliLink,$UpdateStr)) {die("Hiba sUJ 02 ");} 
             $ErrorStr .= ' Err007 ';              
         } 
     }	
