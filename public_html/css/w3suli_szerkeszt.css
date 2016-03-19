@@ -1,5 +1,5 @@
 /* 
-    Author     : Gál Tamás, Guti Patrik
+    Author     : Gál Tamás, Guti Patrik, Tóth-Kovács Gellért
 */
 
 /* Oldalak  szerkesztése*/
@@ -26,7 +26,7 @@
 #chOldalForm:checked      ~ #divOldalForm      {display: block;}
 #chOldalTorolForm:checked ~ #divOldalTorolForm {display: block;}
 #chOldalKepForm:checked   ~ #divOldalKepForm   {display: block;}
-#chOldalModeratorForm:checked   ~ #divOldalModeratorForm   {display: block;}
+#chOldalModeratorForm:checked   ~ #divOldalModeratorForm {display: block;}
 
 
 #divOldalKepForm .Kepszerk img {display:block; float:left; height:100px; margin:5px;}
