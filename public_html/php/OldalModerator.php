@@ -282,14 +282,13 @@ function getOModeratorTeszt($Oid) {
     global $MySqliLink, $Aktoldal, $SzuloOldal, $NagyszuloOldal;
     
     $Fid = $_SESSION['AktFelhasznalo'.'id'];
-    $Oid = $Aktoldal['id'];
     
     $Szulo_Oid     = $SzuloOldal['id']; 
     $Nagyszulo_Oid = $NagyszuloOldal['id'];
     $Dedszulo_Oid  = $NagyszuloOldal['OSzuloId'];
     
     //Felhasználó moderátorságának vizsgálata
-    
+
     $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid)";
     $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gMT 01 ");
     $rowDB  = mysqli_num_rows($result);

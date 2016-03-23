@@ -63,6 +63,7 @@
   require_once 'php/KiegeszitoTartalom.php';
   require_once 'php/FoMenu.php';
   require_once 'php/OldalModerator.php';
+  require_once 'php/OldalLathatosag.php';
   require_once 'php/Menu.php';
   require_once 'php/OldalCikkei.php';
   require_once 'php/Cikk.php';
@@ -86,14 +87,13 @@
     {
         $_SESSION['AktFelhasznalo'.'FSzint'] =  3;
     }
-  } 
+  }
   
   //FELHASZNÁLÓI CSOPORTADATOK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjFCsoport();  
   $_SESSION['ErrorStr']   .= setFCsoport(); 
   $_SESSION['ErrorStr']   .= setFCsoportTorol(); 
   $_SESSION['ErrorStr']   .= setCsoportTagok(); 
-  $_SESSION['ErrorStr']   .= setOModerator();
   
   //AZ OLDAL ADATAINAK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjOldal();
@@ -102,11 +102,12 @@
   $_SESSION['ErrorStr']   .= setOldalKepek();
   $_SESSION['ErrorStr']   .= setOldalKepFeltolt();
   $_SESSION['ErrorStr']   .= setOldalKepTorol();
+  $_SESSION['ErrorStr']   .= setOModerator();
+  $_SESSION['ErrorStr']   .= setOLathatosag();
 
   //A CIKKEK ADATAINAK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjCikk();
   $_SESSION['ErrorStr']   .= setCikk();  
-  $_SESSION['ErrorStr']   .= setCikkTorol();
   
   $_SESSION['ErrorStr']   .= setCikkKepek();
   $_SESSION['ErrorStr']   .= setCikkKepFeltolt();

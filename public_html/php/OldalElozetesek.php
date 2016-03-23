@@ -17,24 +17,30 @@ function getOElozetesekHTML() {
     $rowDB     = mysqli_num_rows($result); 
     if ($rowDB > 0) { 
         while ($row = mysqli_fetch_array($result)){
-            if ($row['ONev']){
-                $HTMLkod .= "<div class ='divOElozetesKulso'>\n";
-                if ($row['OImg']!='') {
-                    if ($Aktoldal['OImgDir']!='') {
-                        $KepUtvonal = "img/".$Aktoldal['OImgDir']."/";            
-                      } else {
-                        $KepUtvonal = "img/";    
-                      }
-                    $Src = $KepUtvonal.$row['OImg']; 
-                    $HTMLkod .= "<div class = 'divOElozetesKep'><img src='$Src'  class = 'imgOE'></div>\n";                    
-                } else {
-                    $HTMLkod .= "<div class = 'divOElozetesKep'> </div>\n";
-                }
-                $HTMLkod .= "<h2>".$row['ONev']."</h2>\n";
-                if ($row['OLeiras']!='') {$HTMLkod .= "<div class = 'divOElozetesLeir'>".$row['OLeiras']."\n";}
-                $HTMLkod .= "<a href='?f0=".$row['OUrl']."'>".$row['ONev']." résztletesen...</a>\n";
-                $HTMLkod .= "</div></div>\n";
-                
+
+            //-------------------------------------------------------------------------------------
+            //OLDAL LÁTHATÓSÁGÁNAK VIZSGÁLATA
+            //-------------------------------------------------------------------------------------
+
+            if(getOMenuLathatosagTeszt($row['id'])>0){
+                if ($row['ONev']){
+                    $HTMLkod .= "<div class ='divOElozetesKulso'>\n";
+                    if ($row['OImg']!='') {
+                        if ($Aktoldal['OImgDir']!='') {
+                            $KepUtvonal = "img/".$Aktoldal['OImgDir']."/";            
+                          } else {
+                            $KepUtvonal = "img/";    
+                          }
+                        $Src = $KepUtvonal.$row['OImg']; 
+                        $HTMLkod .= "<div class = 'divOElozetesKep'><img src='$Src'  class = 'imgOE'></div>\n";                    
+                    } else {
+                        $HTMLkod .= "<div class = 'divOElozetesKep'> </div>\n";
+                    }
+                    $HTMLkod .= "<h2>".$row['ONev']."</h2>\n";
+                    if ($row['OLeiras']!='') {$HTMLkod .= "<div class = 'divOElozetesLeir'>".$row['OLeiras']."\n";}
+                    $HTMLkod .= "<a href='?f0=".$row['OUrl']."'>".$row['ONev']." részletesen...</a>\n";
+                    $HTMLkod .= "</div></div>\n";
+                }   
             }
         }
     }

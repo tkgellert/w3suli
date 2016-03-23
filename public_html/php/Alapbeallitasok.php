@@ -6,37 +6,36 @@
     $AlapAdatok['Stilus']     =  0;
         
 
-    function setAlapbeallitasok() {  
+function setAlapbeallitasok() {  
+    global $MySqliLink, $AlapAdatok;
+    
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>0) 
+    { 
+        $WNev        = $AlapAdatok['WebhelyNev'];
+        $Iskola      = $AlapAdatok['Iskola'];
+        $Cim         = $AlapAdatok['Cim'];
+        $Telefon     = $AlapAdatok['Telefon'];
+        $Stilus      = $AlapAdatok['Stilus'];	
 
-            global $MySqliLink, $AlapAdatok;
-            if ($_SESSION['AktFelhasznalo'.'FSzint']>0) 
-            { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
+        if (isset($_POST['submitAlapbeallitasok']))
+        {  
+            $WNev      = $_POST['WNev'];  
+            $Iskola    = $_POST['Iskola']; 
+            $Cim       = $_POST['Cim'];  
+            $Telefon   = $_POST['Telefon']; 
+            $Stilus    = $_POST['Stilus'];
 
-                $WNev        = $AlapAdatok['WebhelyNev'];
-                $Iskola      = $AlapAdatok['Iskola'];
-                $Cim         = $AlapAdatok['Cim'];
-                $Telefon     = $AlapAdatok['Telefon'];
-                $Stilus      = $AlapAdatok['Stilus'];	
+            $UpdateStr = "UPDATE AlapAdatok SET 
+                          WebhelyNev    ='$WNev',
+                          Iskola        ='$Iskola',
+                          Cim           ='$Cim',
+                          Telefon       ='$Telefon',
+                          Stilus        ='$Stilus'";
 
-                if (isset($_POST['submitAlapbeallitasok']))
-                    {  
-                        $WNev=$_POST['WNev'];  
-                        $Iskola=$_POST['Iskola']; 
-                        $Cim=$_POST['Cim'];  
-                        $Telefon=$_POST['Telefon']; 
-                        $Stilus=$_POST['Stilus'];
-                        
-                        $UpdateStr = "UPDATE AlapAdatok SET 
-                                            WebhelyNev='$WNev',
-                                            Iskola='$Iskola',
-                                            Cim='$Cim',
-                                            Telefon='$Telefon',
-                                            Stilus=$Stilus ";
-
-                        $result      = mysqli_query($MySqliLink,$UpdateStr) OR die("Hiba setAlapbeallitas");
-                    }
-            }  
-    }
+            $result = mysqli_query($MySqliLink,$UpdateStr) OR die("Hiba sAb");
+        }
+    }  
+}
 
 
     function getAlapbeallitasForm() {

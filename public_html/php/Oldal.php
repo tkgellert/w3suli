@@ -37,6 +37,8 @@
     $Aktoldal['OTartalom']          = '';
     $Aktoldal['OImgDir']            = '';
     $Aktoldal['OImg']               = '';
+    
+    $Aktoldal['OLatszik']           = 1;
 
     $SzuloOldal['id']               = -1;
     $SzuloOldal['ONev']             = '';
@@ -271,7 +273,8 @@
           if ($ErrorStr=='') {
            //Az oldal mentése
            $AktOid = $Aktoldal['id'];  
-           $InsertIntoStr = "INSERT INTO Oldalak VALUES ('', '$UjONev','$UjOUrl',1,1,'Az oldal leírása',
+           $OLathatosag = $AktOid['OLathatosag'];
+           $InsertIntoStr = "INSERT INTO Oldalak VALUES ('', '$UjONev','$UjOUrl',$OLathatosag,1,'Az oldal leírása',
                                                           'Az oldal kulcsszavai',$AktOid,$UjOTipKod,'Az oldal tartalma','','')";
            if (!mysqli_query($MySqliLink,$InsertIntoStr)) {
                die("Hiba UO 01 ");               
@@ -355,8 +358,21 @@
             $HTMLkod .= "<input type='number' name='OPrioritas' id='OPrioritas' min='0' max='100' step='1' value='$OPrioritas'></p>\n";  
 
  	    //Láthatóság
-            $HTMLkod .= "<p class='pOLathatosag'><label for='OLathatosag' class='label_1'>Láthatóság:</label>\n ";
-            $HTMLkod .= "<input type='number' name='OLathatosag' id='OLathatosag' min='0' max='100' step='1' value='$OLathatosag'></p>\n";   
+            $HTMLkod .= "<div id='divOLathatosag'>Láthatóság:<br>";
+            
+            if($OLathatosag==0){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='OLathatosag_0' name='OLathatosag' value='0' $checked>";
+            $HTMLkod .="<label for='OLathatosag_0' class='label_1'>senki</label><br>";
+            if($OLathatosag==1){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='OLathatosag_1' name='OLathatosag' value='1' $checked>";
+            $HTMLkod .="<label for='OLathatosag_1' class='label_1'>mindenki</label><br>";
+            if($OLathatosag==2){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='chOldalLathatosagForm' name='OLathatosag' value='2' $checked>";
+            $HTMLkod .="<label for='chOldalLathatosagForm' class='label_1'>adott csoportba tartozók</label><br>";
+            
+
+            $HTMLkod .=getOLathatosagForm();
+            $HTMLkod .="</div>";
             
             //Kulcsszavak
             $HTMLkod .= "<p class='pOKulcsszavak'><label for='OKulcsszavak' class='label_1'>Kulcsszavak:</label>\n ";
@@ -419,8 +435,21 @@
             $HTMLkod .= "<input type='number' name='OPrioritas' id='OPrioritas' min='0' max='100' step='1' value='$OPrioritas'></p>\n";  
 
  	    //Láthatóság
-            $HTMLkod .= "<p class='pOLathatosag'><label for='OLathatosag' class='label_1'>Láthatóság:</label>\n ";
-            $HTMLkod .= "<input type='number' name='OLathatosag' id='OLathatosag' min='0' max='100' step='1' value='$OLathatosag'></p>\n";   
+            $HTMLkod .= "<div id='divOLathatosag'>Láthatóság:<br>";
+
+            if($_POST['OLathatosag']==0){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='OLathatosag_0' name='OLathatosag' value='0' $checked>";
+            $HTMLkod .="<label for='OLathatosag_0' class='label_1'>senki</label><br>";
+            if($_POST['OLathatosag']==1){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='OLathatosag_1' name='OLathatosag' value='1' $checked>";
+            $HTMLkod .="<label for='OLathatosag_1' class='label_1'>mindenki</label><br>";
+            if($_POST['OLathatosag']==2){$checked=" checked ";}else{$checked="";}
+            $HTMLkod .="<input type='radio' id='chOldalLathatosagForm' name='OLathatosag' value='2' $checked>";
+            $HTMLkod .="<label for='chOldalLathatosagForm' class='label_1'>adott csoportba tartozók</label><br>";
+            
+            
+            $HTMLkod .=getOLathatosagForm();
+            $HTMLkod .="</div>";
             
             //Kulcsszavak
             $HTMLkod .= "<p class='pOKulcsszavak'><label for='OKulcsszavak' class='label_1'>Kulcsszavak:</label>\n ";
@@ -475,6 +504,7 @@
         $OTartalom    = $Aktoldal['OTartalom'];   
         $OImgDir      = $Aktoldal['OImgDir'];   
         $OImg         = $Aktoldal['OImg']; 
+        
         
         if ($Aktoldal['OImgDir']=='') {$OImgDir= 'img/';}
           else  {$OImgDir= 'img/'.$Aktoldal['OImgDir'].'/';}
@@ -531,6 +561,11 @@
 	    if (isset($_POST['OKulcsszavak'])) {$OKulcsszavak=test_post($_POST['OKulcsszavak']);}
            //Az oldal mentése
            $AktOid = $Aktoldal['id'];
+           
+           //Ha a kezdőlapnál beállították láthatóságnak a 0-t, akkor a kezdőlapét módosítani kell
+           
+           if($OUrl=="Kezdolap"){$OLathatosag=1;};
+           
            $UpdateStr = "UPDATE Oldalak SET 
                          OTipus=$OTipKod,
                          ONev='$ONev',
@@ -542,6 +577,46 @@
                          OTartalom='$OTartalom'    
                          WHERE id=$AktOid LIMIT 1"; 
            if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 01 ";}
+           
+           $OLathatosag = $_POST['OLathatosag'];
+           
+    //-------------------------------------------------------------------------------------
+    //OLDALLÁTHATÓSÁG BEÁLLÍTÁSA AZ ALOLDALAKRA IS
+    //-------------------------------------------------------------------------------------
+
+           //MÁSODIK SZINT
+           
+           $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOid";
+           $result = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 02");
+           while ($row = mysqli_fetch_array($result)){
+                $AktOGyermekId = $row['id'];
+                $UpdateStr = "UPDATE Oldalak SET OLathatosag='$OLathatosag' WHERE id=$AktOGyermekId LIMIT 1"; 
+
+                if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 03 ";}
+
+                //HARMADIK SZINT
+                
+                $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOGyermekId";
+                $result_2 = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 04");
+                while ($row_2 = mysqli_fetch_array($result_2)){
+                    $AktOUnokaId = $row_2['id'];
+                    $UpdateStr = "UPDATE Oldalak SET OLathatosag='$OLathatosag' WHERE id=$AktOUnokaId LIMIT 1"; 
+                    
+                    if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 05 ";}
+                    
+                    //NEGYEDIK SZINT
+                    
+                    $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOUnokaId";
+                    $result_3 = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 06");
+                    while ($row_3 = mysqli_fetch_array($result_3)){
+                        $AktODedunokaId = $row_3['id'];
+                        $UpdateStr = "UPDATE Oldalak SET OLathatosag='$OLathatosag' WHERE id=$AktODedunokaId LIMIT 1"; 
+
+                        if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 07 ";}
+                    }  
+                } 
+           }
+               
            getOldalData($OUrl);
            $ErrorStr = "A(z) $ONev oldal változott.";
           }            
@@ -709,22 +784,36 @@
                     $HTMLkod  .= "</main>";
                    break;
           case 1:   $HTMLkod  .= "<h1>".$Aktoldal['ONev']."</h1> \n"; // Kategória
-                    $HTMLkod  .= $HTMLFormkod;
-                    $HTMLkod  .= "<main>";
-                    $HTMLkod  .= getCikkekForm();
-                    $HTMLkod  .= $Aktoldal['OTartalom'];
-                    $HTMLkod  .= getCikkekHTML();
-                    $HTMLkod  .= getOElozetesekHTML();
-                    $HTMLkod  .= "</main>";
-                   break;     
+                    if (getOLathatosagTeszt($Aktoldal['id']) > 0)
+                    { // Csak akkor érdekes, ha látogató, vagy bejelentkezett felhasználó     
+                        $HTMLkod  .= $HTMLFormkod;
+                        $HTMLkod  .= "<main>";
+                        $HTMLkod  .= getCikkekForm();
+                        $HTMLkod  .= $Aktoldal['OTartalom'];
+                        $HTMLkod  .= getCikkekHTML();
+                        $HTMLkod  .= getOElozetesekHTML();
+                        $HTMLkod  .= "</main>";
+                    }
+                    else
+                    {
+                        $HTMLkod .= "<h3>Az oldal megtekintéséhez kérjük, jelentkezzen be!</h3>";
+                    }
+                    break;     
           case 2:   $HTMLkod  .= "<h1>".$Aktoldal['ONev']."</h1> \n"; // Híroldal
-                    $HTMLkod  .= $HTMLFormkod;
-                    $HTMLkod  .= "<main>";
-                    $HTMLkod  .= getCikkekForm();
-                    $HTMLkod  .= $Aktoldal['OTartalom'];
-                    $HTMLkod  .= getCikkekHTML();
-                    $HTMLkod  .= getOElozetesekHTML();
-                    $HTMLkod  .= "</main>";
+                    if (getOLathatosagTeszt($Aktoldal['id']) > 0)
+                    { // Csak akkor érdekes, ha látogató, vagy bejelentkezett felhasználó     
+                        $HTMLkod  .= $HTMLFormkod;
+                        $HTMLkod  .= "<main>";
+                        $HTMLkod  .= getCikkekForm();
+                        $HTMLkod  .= $Aktoldal['OTartalom'];
+                        $HTMLkod  .= getCikkekHTML();
+                        $HTMLkod  .= getOElozetesekHTML();
+                        $HTMLkod  .= "</main>";
+                    }
+                    else
+                    {
+                        $HTMLkod .= "<h3>Az oldal megtekintéséhez kérjük, jelentkezzen be!</h3>";
+                    }
                    break; 
           case 10:  $HTMLkod  .= "<h1>Bejelentkezés</h1> \n";
                     $HTMLkod  .= getBelepesForm();
