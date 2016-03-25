@@ -273,7 +273,7 @@
           if ($ErrorStr=='') {
            //Az oldal mentése
            $AktOid = $Aktoldal['id'];  
-           $OLathatosag = $AktOid['OLathatosag'];
+           $OLathatosag = $Aktoldal['OLathatosag'];
            $InsertIntoStr = "INSERT INTO Oldalak VALUES ('', '$UjONev','$UjOUrl',$OLathatosag,1,'Az oldal leírása',
                                                           'Az oldal kulcsszavai',$AktOid,$UjOTipKod,'Az oldal tartalma','','')";
            if (!mysqli_query($MySqliLink,$InsertIntoStr)) {
@@ -796,7 +796,7 @@
                     }
                     else
                     {
-                        $HTMLkod .= "<h3>Az oldal megtekintéséhez kérjük, jelentkezzen be!</h3>";
+                        $HTMLkod .= "<h3>Az oldal megtekintéséhez nincs jogosultsága!</h3>";
                     }
                     break;     
           case 2:   $HTMLkod  .= "<h1>".$Aktoldal['ONev']."</h1> \n"; // Híroldal
@@ -812,7 +812,7 @@
                     }
                     else
                     {
-                        $HTMLkod .= "<h3>Az oldal megtekintéséhez kérjük, jelentkezzen be!</h3>";
+                        $HTMLkod .= "<h3>Az oldal megtekintéséhez nincs jogosultsága!</h3>";
                     }
                    break; 
           case 10:  $HTMLkod  .= "<h1>Bejelentkezés</h1> \n";

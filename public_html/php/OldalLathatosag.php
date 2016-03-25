@@ -121,7 +121,6 @@ function setOLathatosag(){
                         //echo $DeleteStr."<br>";
                         $result    = mysqli_query($MySqliLink, $DeleteStr) OR die("Hiba sOL 08 ");
                     }
-                
                 }
             }
         }
@@ -140,7 +139,6 @@ function getOLathatosagTeszt($Oid) {
     $Fid         = $_SESSION['AktFelhasznalo'.'id'];
     $OLathatosag = $Aktoldal['OLathatosag']; 
     
-
     $Oid           = $Aktoldal['id'];
     $Szulo_Oid     = $SzuloOldal['id']; 
     $Nagyszulo_Oid = $NagyszuloOldal['id'];
@@ -153,87 +151,92 @@ function getOLathatosagTeszt($Oid) {
             $SelectStr = "SELECT * FROM Oldalak WHERE OLathatosag=$OLathatosag AND (id=$Oid OR id=$Szulo_Oid OR id=$Nagyszulo_Oid OR id=$Dedszulo_Oid)";
             $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOLT 01 ");
             $rowDB       = mysqli_num_rows($result); 
-            if ($rowDB > 0){
-            $LathatosagOK=0;}
-        
+            if ($rowDB > 0){$LathatosagOK=0;}
         }
         if($OLathatosag==1) //Az oldalt mindenki láthatja
         {
             $SelectStr = "SELECT * FROM Oldalak WHERE OLathatosag=$OLathatosag AND (id=$Oid OR id=$Szulo_Oid OR id=$Nagyszulo_Oid OR id=$Dedszulo_Oid)";
             $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOLT 02 ");
             $rowDB       = mysqli_num_rows($result); 
-            if ($rowDB > 0){
-            $LathatosagOK=1;} 
+            if ($rowDB > 0){$LathatosagOK=1;} 
         } 
-        
         if($OLathatosag==2) //Az oldalt meghatározott csoportok láthatják
         { 
-            $SelectStr ="SELECT * FROM OLathatosag AS OL
-                    LEFT JOIN FCsoportTagok AS FCsT
-                    ON FCsT.CSid=OL.CSid WHERE FCsT.Fid=$Fid 
-                    AND (OL.Oid=$Oid OR OL.Oid=$Szulo_Oid OR OL.Oid=$Nagyszulo_Oid OR OL.Oid=$Dedszulo_Oid)";
+            $SelectStr="SELECT * FROM OLathatosag AS OL
+                        LEFT JOIN FCsoportTagok AS FCsT
+                        ON FCsT.CSid=OL.CSid WHERE FCsT.Fid=$Fid 
+                        AND (OL.Oid=$Oid OR OL.Oid=$Szulo_Oid OR OL.Oid=$Nagyszulo_Oid OR OL.Oid=$Dedszulo_Oid)";
 
-            $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gLT 01 ");
-            $rowDB  = mysqli_num_rows($result);
+            $result   = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gLT 01 ");
+            $rowDB    = mysqli_num_rows($result);
             mysql_free_result($result);  
 
             if($rowDB>0){$LathatosagOK=1;}
         }
     }
     
-    //Moderátorok és rendszergazdák láthatják az összes oldalt
-    if($_SESSION['AktFelhasznalo'.'FSzint']>2){ $LathatosagOK=1; }
+    //Moderátorstátusz vizsgálata
+    if(getOModeratorMenuTeszt($Oid)>0){$LathatosagOK=1;}
+    
+    //A rendszergazdák láthatják az összes oldalt
+    if($_SESSION['AktFelhasznalo'.'FSzint']>3){$LathatosagOK=1;}
     
     return $LathatosagOK;
 }
 function getOMenuLathatosagTeszt($Oid) {
-    $LathatosagOK = 0;
-    global $MySqliLink, $Aktoldal, $SzuloOldal, $NagyszuloOldal;
-    
+    global $MySqliLink;
+    $LathatosagOK = 0;       
     $Fid = $_SESSION['AktFelhasznalo'.'id'];
-    $Szulo_Oid     = $SzuloOldal['id']; 
-    $Nagyszulo_Oid = $NagyszuloOldal['id'];
-   
-    if($_SESSION['AktFelhasznalo'.'FSzint']==1 || $_SESSION['AktFelhasznalo'.'FSzint']==2)
-    { //Csak a látogató és bejelentkezett felhasználó esetén vizsgáljuk a láthatóságot
-        $SelectStr = "SELECT OLathatosag FROM Oldalak WHERE id=$Oid";
-        $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 01 ");
-        $row = mysqli_fetch_array($result);
+       
+    //Csak a látogató és bejelentkezett felhasználó esetén vizsgáljuk a láthatóságot
     
-        $OLathatosag = $row['OLathatosag'];  
-        
-        if($OLathatosag==0){$LathatosagOK=0;} //Az oldalt senki sem láthatja
-        if($OLathatosag==1){$LathatosagOK=1;} //Az oldalt mindenki láthatja
-        if($OLathatosag==2) //Az oldalt valamennyi felhasználó láthatja (csoporttagság alapján)
-        {
-            $SelectStr ="SELECT * FROM OLathatosag AS OL
+    $SelectStr = "SELECT OSzuloId, OLathatosag FROM Oldalak WHERE id=$Oid";
+    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 01 ");
+    $row       = mysqli_fetch_array($result);
+
+    $OLathatosag = $row['OLathatosag']; 
+    $Szulo_Oid   = $row['OSzuloId'];
+
+    if($OLathatosag==0){$LathatosagOK=0;} //Az oldalt senki sem láthatja (kivéve, ha moderátor)
+    if($OLathatosag==1){$LathatosagOK=1;} //Az oldalt mindenki láthatja
+    if($OLathatosag==2) //Az oldalt valamennyi felhasználó láthatja (csoporttagság alapján)
+    {
+        $Nagyszulo_Oid = 1;
+        $Dedszulo_Oid  = 1;
+
+        if($Szulo_Oid>1){ //Kezdőlap esetén $Szulo_Oid = 0;
+            $SelectStr ="SELECT * FROM Oldalak WHERE id=$Szulo_Oid";
+            $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 02 ");
+            $row       = mysqli_fetch_array($result);
+            mysql_free_result($result); 
+
+            $Nagyszulo_Oid = $row['OSzuloId'];
+
+            if($Nagyszulo_Oid!=1){
+                $SelectStr ="SELECT * FROM Oldalak WHERE id=$Nagyszulo_Oid";
+                $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 03 ");
+                $row       = mysqli_fetch_array($result);
+                mysql_free_result($result); 
+
+                $Dedszulo_Oid = $row['OSzuloId'];
+            }
+        }
+        $SelectStr ="SELECT * FROM OLathatosag AS OL
                     LEFT JOIN FCsoportTagok AS FCsT
                     ON FCsT.CSid=OL.CSid WHERE FCsT.Fid=$Fid 
-                    AND (OL.Oid=$Oid OR OL.Oid=$Szulo_Oid OR OL.Oid=$Nagyszulo_Oid)";
+                    AND (OL.Oid=$Oid OR OL.Oid=$Szulo_Oid OR OL.Oid=$Nagyszulo_Oid OR OL.Oid=$Dedszulo_Oid)";
+        $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 04 ");
+        $rowDB     = mysqli_num_rows($result);
+        mysql_free_result($result);  
 
-            $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 02 ");
-            $rowDB  = mysqli_num_rows($result);
-            mysql_free_result($result);  
-
-            if($rowDB>0){$LathatosagOK=1;}
-        }
+        if($rowDB>0){$LathatosagOK=1;}else{$LathatosagOK=0;}
     }
     
-    //Az aloldalak moderátorainak vizsgálata
+    //Moderátorstátusz vizsgálata
+    if(getOModeratorMenuTeszt($Oid)>0){$LathatosagOK=1;}
     
-    if($_SESSION['AktFelhasznalo'.'FSzint']==2)
-    {
-        $SelectStr = "SELECT * FROM Oldalak WHERE id=$Oid";
-        $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMLT 03 ");
-        while ($row = mysqli_fetch_array($result))
-        {
-            if (getOModeratorTeszt($row['id']) > 0){$LathatosagOK=1;}
-        }
-        
-    }
-    
-    //Moderátorok és rendszergazdák láthatják az összes oldalt
-    if($_SESSION['AktFelhasznalo'.'FSzint']>2){ $LathatosagOK=1; }
+    //A rendszergazdák láthatják az összes oldalt
+    if($_SESSION['AktFelhasznalo'.'FSzint']>3){$LathatosagOK=1;}
     
     return $LathatosagOK;
 }

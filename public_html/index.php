@@ -88,7 +88,7 @@
         $_SESSION['AktFelhasznalo'.'FSzint'] =  3;
     }
   }
-  
+
   //FELHASZNÁLÓI CSOPORTADATOK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjFCsoport();  
   $_SESSION['ErrorStr']   .= setFCsoport(); 
