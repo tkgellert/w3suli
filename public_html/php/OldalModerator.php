@@ -287,24 +287,26 @@ function getOModeratorTeszt($Oid) {
     $Nagyszulo_Oid = $NagyszuloOldal['id'];
     $Dedszulo_Oid  = $NagyszuloOldal['OSzuloId'];
     
-    //Felhasználó moderátorságának vizsgálata
-
-    $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid)";
-    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMT 01 ");
-    $rowDB  = mysqli_num_rows($result);
-    mysql_free_result($result);                    
-    if($rowDB>0){$ModeratorOK=1;}
+    if($Dedszulo_Oid!=1){$Ukszulo_Oid=1;}else{$Ukszulo_Oid=0;}
     
     //Csoport moderátorságának vizsgálata
     
     $SelectStr ="SELECT * FROM OModeratorok AS OM
             LEFT JOIN FCsoportTagok AS FCsT
             ON FCsT.CSid=OM.CSid WHERE FCsT.Fid=$Fid 
-            AND (OM.Oid=$Oid OR OM.Oid=$Szulo_Oid OR OM.Oid=$Nagyszulo_Oid OR OM.Oid=$Dedszulo_Oid)";
-    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMT 02 ");
+            AND (OM.Oid=$Oid OR OM.Oid=$Szulo_Oid OR OM.Oid=$Nagyszulo_Oid OR OM.Oid=$Dedszulo_Oid OR OM.Oid=$Ukszulo_Oid)";
+    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMT 01 ");
     $rowDB  = mysqli_num_rows($result);
     mysql_free_result($result);  
 
+    if($rowDB>0){$ModeratorOK=1;}else{$ModeratorOK=0;}
+    
+    //Felhasználó moderátorságának vizsgálata
+
+    $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid OR Oid=$Ukszulo_Oid)";
+    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMT 02 ");
+    $rowDB  = mysqli_num_rows($result);
+    mysql_free_result($result);                    
     if($rowDB>0){$ModeratorOK=1;}
 
     return $ModeratorOK;
@@ -316,6 +318,7 @@ function getOModeratorMenuTeszt($Oid) {
 
     $Nagyszulo_Oid = 1;
     $Dedszulo_Oid  = 1;
+    $Ukszulo_Oid   = 1;
     
     $SelectStr = "SELECT OSzuloId FROM Oldalak WHERE id=$Oid";
     $result      = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMMT 01 ");
@@ -341,26 +344,26 @@ function getOModeratorMenuTeszt($Oid) {
         }
     }
     
-    //Felhasználó moderátorságának vizsgálata
+    //Csoport moderátorságának vizsgálata
     
     $Fid = $_SESSION['AktFelhasznalo'.'id'];
-    
-    $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid)";
-    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMMT 04 ");
-    $rowDB  = mysqli_num_rows($result);
-    mysql_free_result($result);                    
-    if($rowDB>0){$ModeratorOK=1;}else{$ModeratorOK=0;}
-    
-    //Csoport moderátorságának vizsgálata
     
     $SelectStr ="SELECT * FROM OModeratorok AS OM
             LEFT JOIN FCsoportTagok AS FCsT
             ON FCsT.CSid=OM.CSid WHERE FCsT.Fid=$Fid 
-            AND (OM.Oid=$Oid OR OM.Oid=$Szulo_Oid OR OM.Oid=$Nagyszulo_Oid OR OM.Oid=$Dedszulo_Oid)";
-    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMMT 05 ");
+            AND (OM.Oid=$Oid OR OM.Oid=$Szulo_Oid OR OM.Oid=$Nagyszulo_Oid OR OM.Oid=$Dedszulo_Oid OR OM.Oid=$Ukszulo_Oid)";
+    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMMT 04 ");
     $rowDB  = mysqli_num_rows($result);
     mysql_free_result($result);
     
+    if($rowDB>0){$ModeratorOK=1;}else{$ModeratorOK=0;}
+    
+    //Felhasználó moderátorságának vizsgálata
+    
+    $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid OR Oid=$Ukszulo_Oid)";
+    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba gOMMT 05 ");
+    $rowDB  = mysqli_num_rows($result);
+    mysql_free_result($result);                    
     if($rowDB>0){$ModeratorOK=1;}else{$ModeratorOK=0;}
 
     return $ModeratorOK;
