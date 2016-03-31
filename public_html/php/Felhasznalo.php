@@ -188,7 +188,7 @@ function setUjFelhasznalo() {
     $FKep     = '';
     $FCsoport = '';
 		
-    if (($_SESSION['AktFelhasznalo'.'FSzint']>0) &&  (isset($_POST['submitUjFelhasznaloForm']))){ 			
+    if (($_SESSION['AktFelhasznalo'.'FSzint']>3) &&  (isset($_POST['submitUjFelhasznaloForm']))){ 			
         if (isset($_POST['FNev']))   	    {$FNev     = test_post($_POST['FNev']);}
         if (isset($_POST['FFNev']))         {$FFNev    = test_post($_POST['FFNev']);}
         if (isset($_POST['FJelszo']))       {$FJelszo  = test_post($_POST['FJelszo']);}
@@ -251,7 +251,7 @@ function getUjFelhasznaloForm() {
     $HTMLkod  = '';
     $ErrorStr = ''; 
 	
-    if ($_SESSION['AktFelhasznalo'.'FSzint']>0)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
         $FNev     = '';
         $FFNev    = '';
         $FJelszo  = '';
@@ -424,7 +424,7 @@ function setFelhasznalo() {
     $ErrorStr .= setFelhasznaloCsoportValaszt();
     $ErrorStr .= setFelhasznaloValaszt();
 
-    if (($_SESSION['AktFelhasznalo'.'FSzint']>0) &&  (isset($_POST['submitFelhasznaloForm']))){ 			
+    if (($_SESSION['AktFelhasznalo'.'FSzint']>3) &&  (isset($_POST['submitFelhasznaloForm']))){ 			
         if (isset($_POST['FNev']))   {$FNev    = test_post($_POST['FNev']);}  
         if (isset($_POST['FFNev']))  {$FFNev   = test_post($_POST['FFNev']);} 
         if (isset($_POST['FEmail'])) {$FEmail  = test_post($_POST['FEmail']);} 
