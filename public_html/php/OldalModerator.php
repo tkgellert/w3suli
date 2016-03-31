@@ -357,7 +357,7 @@ function getOModeratorMenuTeszt($Oid) {
     mysql_free_result($result);
     
     if($rowDB>0){$ModeratorOK=1;}else{$ModeratorOK=0;}
-    
+
     //Felhasználó moderátorságának vizsgálata
     
     $SelectStr   = "SELECT * FROM OModeratorok WHERE Fid=$Fid AND (Oid=$Oid OR Oid=$Szulo_Oid OR Oid=$Nagyszulo_Oid OR Oid=$Dedszulo_Oid OR Oid=$Ukszulo_Oid)";

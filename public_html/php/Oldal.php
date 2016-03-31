@@ -141,7 +141,7 @@
                 if ($row['OSzuloId']>1) {$DedSzuloId = $row['OSzuloId'];}
             }
         }
-        
+        if($_SESSION['ElozoOldalId'] != $Aktoldal['id']){$_SESSION['SzerkCikk'.'id']=0; $_SESSION['SzerkCikk'.'Oid']=0; }
         //Ha nem szerkesztő oldal, akkor eltároljuk ez lesz az ElozoOldalId
         //Egy szerkesztés, be- vagy kijelentkezés után ide térünk vissza
         if ($Aktoldal['OTipus']<10) {$_SESSION['ElozoOldalId']   = $Aktoldal['id']; }
@@ -272,10 +272,11 @@
           // ============== ADATKEZELÉS - ÚJ REKORD LÉTREHOZÁSA   =====================
           if ($ErrorStr=='') {
            //Az oldal mentése
-           $AktOid = $Aktoldal['id'];  
-           $OLathatosag = $Aktoldal['OLathatosag'];
+           $AktOid        = $Aktoldal['id'];  
+           $OLathatosag   = $Aktoldal['OLathatosag'];
            $InsertIntoStr = "INSERT INTO Oldalak VALUES ('', '$UjONev','$UjOUrl',$OLathatosag,1,'Az oldal leírása',
                                                           'Az oldal kulcsszavai',$AktOid,$UjOTipKod,'Az oldal tartalma','','')";
+           
            if (!mysqli_query($MySqliLink,$InsertIntoStr)) {
                die("Hiba UO 01 ");               
            } else {
@@ -357,7 +358,8 @@
             $HTMLkod .= "<p class='pOPrioritas'><label for='OPrioritas' class='label_1'>Prioritás:</label>\n ";
             $HTMLkod .= "<input type='number' name='OPrioritas' id='OPrioritas' min='0' max='100' step='1' value='$OPrioritas'></p>\n";  
 
- 	    //Láthatóság
+        
+            //Láthatóság
             $HTMLkod .= "<div id='divOLathatosag'>Láthatóság:<br>";
             
             if($OLathatosag==0){$checked=" checked ";}else{$checked="";}
@@ -449,7 +451,7 @@
             
             
             $HTMLkod .=getOLathatosagForm();
-            $HTMLkod .="</div>";
+            $HTMLkod .="</div>";  
             
             //Kulcsszavak
             $HTMLkod .= "<p class='pOKulcsszavak'><label for='OKulcsszavak' class='label_1'>Kulcsszavak:</label>\n ";
@@ -504,7 +506,6 @@
         $OTartalom    = $Aktoldal['OTartalom'];   
         $OImgDir      = $Aktoldal['OImgDir'];   
         $OImg         = $Aktoldal['OImg']; 
-        
         
         if ($Aktoldal['OImgDir']=='') {$OImgDir= 'img/';}
           else  {$OImgDir= 'img/'.$Aktoldal['OImgDir'].'/';}
@@ -561,11 +562,10 @@
 	    if (isset($_POST['OKulcsszavak'])) {$OKulcsszavak=test_post($_POST['OKulcsszavak']);}
            //Az oldal mentése
            $AktOid = $Aktoldal['id'];
-           
+                      
            //Ha a kezdőlapnál beállították láthatóságnak a 0-t, akkor a kezdőlapét módosítani kell
            
            if($OUrl=="Kezdolap"){$OLathatosag=1;};
-           
            $UpdateStr = "UPDATE Oldalak SET 
                          OTipus=$OTipKod,
                          ONev='$ONev',
@@ -578,7 +578,7 @@
                          WHERE id=$AktOid LIMIT 1"; 
            if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 01 ";}
            
-           $OLathatosag = $_POST['OLathatosag'];
+            $OLathatosag = $_POST['OLathatosag'];
            
     //-------------------------------------------------------------------------------------
     //OLDALLÁTHATÓSÁG BEÁLLÍTÁSA AZ ALOLDALAKRA IS
@@ -774,14 +774,14 @@
         $HTMLkod  .= "<div id='divOTartalom'>\n";  
         //$HTMLkod  .= "<h1>".$Aktoldal['OTipus']."</h1>\n";
         switch ($Aktoldal['OTipus']) {
-          case 0:   $HTMLkod  .= "<h1>".$AlapAdatok['WebhelyNev']."</h1>\n "; // Kezdőlap
-                    $HTMLkod  .= $HTMLFormkod;
-                    $HTMLkod  .= "<main>";
-                    $HTMLkod  .= getCikkekForm();
-                    $HTMLkod  .= $Aktoldal['OTartalom'];
-                    $HTMLkod  .= getCikkekHTML();
-                    $HTMLkod  .= getOElozetesekHTML();
-                    $HTMLkod  .= "</main>";
+          case 0:   $HTMLkod  .= "<h1>".$AlapAdatok['WebhelyNev']."</h1>\n "; // Kezdőlap                    
+                        $HTMLkod  .= $HTMLFormkod;
+                        $HTMLkod  .= "<main>";
+                        $HTMLkod  .= getCikkekForm();
+                        $HTMLkod  .= $Aktoldal['OTartalom'];
+                        $HTMLkod  .= getCikkekHTML();
+                        $HTMLkod  .= getOElozetesekHTML();
+                        $HTMLkod  .= "</main>";                   
                    break;
           case 1:   $HTMLkod  .= "<h1>".$Aktoldal['ONev']."</h1> \n"; // Kategória
                     if (getOLathatosagTeszt($Aktoldal['id']) > 0)
@@ -798,10 +798,9 @@
                     {
                         $HTMLkod .= "<h3>Az oldal megtekintéséhez nincs jogosultsága!</h3>";
                     }
-                    break;     
+                   break;     
           case 2:   $HTMLkod  .= "<h1>".$Aktoldal['ONev']."</h1> \n"; // Híroldal
-                    if (getOLathatosagTeszt($Aktoldal['id']) > 0)
-                    { // Csak akkor érdekes, ha látogató, vagy bejelentkezett felhasználó     
+                    if (getOLathatosagTeszt($Aktoldal['id']) > 0) {
                         $HTMLkod  .= $HTMLFormkod;
                         $HTMLkod  .= "<main>";
                         $HTMLkod  .= getCikkekForm();
@@ -813,7 +812,7 @@
                     else
                     {
                         $HTMLkod .= "<h3>Az oldal megtekintéséhez nincs jogosultsága!</h3>";
-                    }
+                    }     
                    break; 
           case 10:  $HTMLkod  .= "<h1>Bejelentkezés</h1> \n";
                     $HTMLkod  .= getBelepesForm();
@@ -853,7 +852,7 @@
           case 53:  $HTMLkod  .= "<h1>Főmenü linkjeinek beállítása</h1> \n";
                     $HTMLkod  .= getFoMenuForm();
                    break;       
-          case 54:  $HTMLkod  .= "<h1>Helyi menű plusz infók</h1> \n";
+          case 54:  $HTMLkod  .= "<h1>Helyi menü plusz</h1> \n";
                     $HTMLkod  .= getMenuPluszForm();
                    break;                  
         }
@@ -873,6 +872,11 @@
         }
         //Az aktuális stíluslap linkje 
         $HTMLkod .= "<link type='text/css' rel='stylesheet' media='all'   href='css/w3suli_stilus_".$AlapAdatok['Stilus'].".css' />\n";
+        $description = $Aktoldal['OLeiras'];
+        $HTMLkod .= "  <meta name='description' content='$description'> \n";
+        
+        $description = $Aktoldal['OKulcsszavak'];
+        $HTMLkod .= "  <meta name='keywords' content='$keywords'> \n";
         return $HTMLkod;
     }
 

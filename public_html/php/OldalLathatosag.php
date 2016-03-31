@@ -51,7 +51,7 @@ function getOLathatosagForm(){
     } 
     return $HTMLkod;
 }
-function setOLathatosag(){
+function setOLathatosag(){ 
     global $MySqliLink, $Aktoldal;
     $ErrorStr = '';
     
@@ -60,7 +60,7 @@ function setOLathatosag(){
     $OLathatosag = $Aktoldal['OLathatosag']; 
     
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {
-        if (isset($_POST['submitOldalForm'])) {
+        if (isset($_POST['submitOldalForm'])) {                       
             $OLathatosagDB = test_post($_POST['OLathatosagDB']);
             for ($i = 0; $i < $OLathatosagDB; $i++){
                 $id = test_post($_POST["OLathatosagId_$i"]);
@@ -96,8 +96,8 @@ function setOLathatosag(){
                 else
                 {
                     $SelectStr = "SELECT * FROM OLathatosag WHERE CSid=$id AND OId=$Oid "; //echo $SelectStr."<br>";
-                    $result     = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sOL 05 ");
-                    $rowDB  = mysqli_num_rows($result);
+                    $result    = mysqli_query($MySqliLink,$SelectStr) OR die("Hiba sOL 05 ");
+                    $rowDB     = mysqli_num_rows($result);
                     mysql_free_result($result);
 
                     if($rowDB>0){
@@ -137,8 +137,7 @@ function getOLathatosagTeszt($Oid) {
     global $MySqliLink, $Aktoldal, $SzuloOldal, $NagyszuloOldal;
     
     $Fid         = $_SESSION['AktFelhasznalo'.'id'];
-    $OLathatosag = $Aktoldal['OLathatosag']; 
-    
+    $OLathatosag = $Aktoldal['OLathatosag'];      
     $Oid           = $Aktoldal['id'];
     $Szulo_Oid     = $SzuloOldal['id']; 
     $Nagyszulo_Oid = $NagyszuloOldal['id'];
@@ -174,12 +173,12 @@ function getOLathatosagTeszt($Oid) {
             if($rowDB>0){$LathatosagOK=1;}
         }
     }
-    
+
     //Moderátorstátusz vizsgálata
-    if(getOModeratorMenuTeszt($Oid)>0){$LathatosagOK=1;}
+    if(getOModeratorMenuTeszt($Oid)>0){$LathatosagOK=1;} 
     
     //A rendszergazdák láthatják az összes oldalt
-    if($_SESSION['AktFelhasznalo'.'FSzint']>3){$LathatosagOK=1;}
+    if($_SESSION['AktFelhasznalo'.'FSzint']>3){$LathatosagOK=1;} 
     
     return $LathatosagOK;
 }
