@@ -18,13 +18,12 @@ function setAlapbeallitasok() {
         $Telefon     = $AlapAdatok['Telefon'];
         $Stilus      = $AlapAdatok['Stilus'];	
 
-        if (isset($_POST['submitAlapbeallitasok']))
-        {  
-            $WNev=$_POST['WNev'];  
-            $Iskola=$_POST['Iskola']; 
-            $Cim=$_POST['Cim'];  
+        if (isset($_POST['submitAlapbeallitasok'])) {  
+            $WNev   =$_POST['WNev'];  
+            $Iskola =$_POST['Iskola']; 
+            $Cim    =$_POST['Cim'];  
             $Telefon=$_POST['Telefon']; 
-            $Stilus=$_POST['Stilus'];
+            $Stilus =$_POST['Stilus'];
 
             $UpdateStr = "UPDATE AlapAdatok SET 
                                 WebhelyNev='$WNev',
@@ -40,13 +39,11 @@ function setAlapbeallitasok() {
 
 
 function getAlapbeallitasForm() {
-
     global $AlapAdatok;
     $HTMLkod='';
     $ErrorStr = '';         
 
-    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {  
-
+    if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  {
         $WNev        = $AlapAdatok['WebhelyNev'];
         $Iskola      = $AlapAdatok['Iskola'];
         $Cim         = $AlapAdatok['Cim'];
@@ -59,27 +56,22 @@ function getAlapbeallitasForm() {
         $HTMLkod .= "<form action='?f0=alapbeallitasok' method='post' id='formAlapbeallitasForm'>\n";
 
         //Webhely neve
-
         $HTMLkod .= "<p class='pWNev'><label for='WNev' class='label_1'>A webhely neve:</label><br>\n ";
         $HTMLkod .= "<input type='text' name='WNev' id='WNev' placeholder='Webhelynév' value='$WNev' size='40'></p>\n"; 
 
         //Iskola neve
-
         $HTMLkod .= "<p class='pIskola'><label for='Iskola' class='label_1'>Az iskola neve:</label><br>\n ";
         $HTMLkod .= "<input type='text' name='Iskola' id='Iskola' placeholder='Iskola neve' value='$Iskola' size='40'></p>\n"; 
 
         //Iskola címe
-
         $HTMLkod .= "<p class='pCim'><label for='Cim' class='label_1'>Az iskola címe:</label><br>\n ";
         $HTMLkod .= "<input type='text' name='Cim' id='Cim' placeholder='Iskola címe' value='$Cim' size='40'></p>\n"; 
 
         //Iskola telefonszám
-
         $HTMLkod .= "<p class='pTelefon'><label for='Telefon' class='label_1'>Az iskola telefonszáma:</label><br>\n ";
         $HTMLkod .= "<input type='text' name='Telefon' id='Telefon' placeholder='Iskola telefonszáma' value='$Telefon' size='40'></p>\n"; 
 
         //Stíluskiválasztó
-
         $HTMLkod .= "<p class='pStilus'><label for='Stilus' class='label_1'>Stilus:</label>\n ";
         $HTMLkod .= "<input type='number' name='Stilus' id='Stilus' min='0' max='12' step='1' value='$Stilus'></p>\n";  
 

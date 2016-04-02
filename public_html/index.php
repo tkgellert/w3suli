@@ -87,14 +87,14 @@
     {
         $_SESSION['AktFelhasznalo'.'FSzint'] =  3;
     }
-  }
-
+  } 
+  
   //FELHASZNÁLÓI CSOPORTADATOK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjFCsoport();  
   $_SESSION['ErrorStr']   .= setFCsoport(); 
   $_SESSION['ErrorStr']   .= setFCsoportTorol(); 
   $_SESSION['ErrorStr']   .= setCsoportTagok(); 
-  
+    
   //AZ OLDAL ADATAINAK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjOldal();
   $_SESSION['ErrorStr']   .= setOldal();
@@ -108,10 +108,10 @@
   //A CIKKEK ADATAINAK MÓDOSÍTÁSA
   $_SESSION['ErrorStr']   .= setUjCikk();
   $_SESSION['ErrorStr']   .= setCikk();  
+  $_SESSION['ErrorStr']   .= setCikkTorol();
   
   $_SESSION['ErrorStr']   .= setCikkKepek();
   $_SESSION['ErrorStr']   .= setCikkKepFeltolt();
-  $_SESSION['ErrorStr']   .= setCikkKepTorol();  
   
   //KIEGÉSZÍTŐ TARTALOM MÓDOSÍTÁSA
  $_SESSION['ErrorStr']   .= setKiegT(); 
@@ -129,6 +129,8 @@
      <link type="text/css" rel="stylesheet" media="all"   href="css/w3suli_alap.css" />  
      <link type="text/css" rel="stylesheet" media="all"   href="css/w3suli_szerkeszt.css" />  
      <link type="text/css" rel="stylesheet" media="all"   href="css/w3suli_responsive.css" />
+     <link href='https://fonts.googleapis.com/css?family=Istok+Web:700,400&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+     <link  rel="icon" type="image/png" href="img/ikonok/logo.png">
      <?php echo getHead(); ?>
   </head>
   <body>	  
