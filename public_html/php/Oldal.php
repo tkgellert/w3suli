@@ -1,7 +1,5 @@
 <?php
-
-
-/**
+/*
  * OTipus
  *  0 = Kezdőlap
  *  1 = Kategória
@@ -21,7 +19,6 @@
  * 51 = Alapbeállítások
  * 52 = Kiegészítő tartalom
  * 53 = Főmenü linkjeinek beállítása
- *
  */
 
 // ============== ADATKEZELÉS - ALAPADATOK INICIALIZÁLÁSA =====================
@@ -581,7 +578,7 @@ function setOldal() {
 //OLDALLÁTHATÓSÁG BEÁLLÍTÁSA AZ ALOLDALAKRA IS
 //-------------------------------------------------------------------------------------
 
-                //MÁSODIK SZINT
+                //ELSŐ SZINT
 
                 $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOid";
                 $result = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 02");
@@ -591,7 +588,7 @@ function setOldal() {
 
                     if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 03 ";}
 
-                    //HARMADIK SZINT
+                    //MÁSODIK SZINT
 
                     $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOGyermekId";
                     $result_2 = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 04");
@@ -601,7 +598,7 @@ function setOldal() {
 
                         if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 05 ";}
 
-                        //NEGYEDIK SZINT
+                        //HARMADIK SZINT
 
                         $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktOUnokaId";
                         $result_3 = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 06");
@@ -610,6 +607,17 @@ function setOldal() {
                             $UpdateStr = "UPDATE Oldalak SET OLathatosag='$OLathatosag' WHERE id=$AktODedunokaId LIMIT 1"; 
 
                             if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 07 ";}
+                            
+                            //NEGYEDIK SZINT
+                            
+                            $SelectStr   = "SELECT id FROM Oldalak WHERE OSzuloId=$AktODedunokaId";
+                            $result_4 = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba setO 08");
+                            while ($row_4 = mysqli_fetch_array($result_4)){
+                                $AktOUkdunokaId = $row_4['id'];
+                                $UpdateStr = "UPDATE Oldalak SET OLathatosag='$OLathatosag' WHERE id=$AktOUkdunokaId LIMIT 1"; 
+
+                                if (!mysqli_query($MySqliLink,$UpdateStr))  {echo "Hiba setO 09 ";}
+                            } 
                         }  
                     } 
                 }
@@ -876,7 +884,4 @@ function getHead() {
     $HTMLkod .= "  <meta name='keywords' content='$keywords'> \n";
     return $HTMLkod;
 }
-
-
-
 ?>
