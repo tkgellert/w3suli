@@ -47,9 +47,8 @@
             $HTMLkod2 .= "<li class='M1'><a href='?f0=alapbeallitasok'>Alapbeállítások</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=oldalterkep'>Oldaltérkép</a></li>\n"; 
             $HTMLkod2 .= "</li></ul>\n"; 
-            
-            $HTMLkod2 .= "<div class='divMenuInfo1'>Tartalom</div>\n";
         }
+        $HTMLkod2 .= "<div class='divMenuInfo1'>Tartalom</div>\n";
         if ($HTMLkod2 != '') {$HTMLkod1 .= $HTMLkod2;}
         
         // ================ KATEGÓRIÁK ÉS HÍROLDALAK TÖBBSZINTŰ LISTÁJA ============================= 
