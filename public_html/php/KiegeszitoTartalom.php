@@ -64,12 +64,17 @@ function setKiegT() {
     return $ErrorStr;
 }
 
-function getKiegTForm() {      
+
+
+function getKiegTForm() {
     global $MySqliLink, $KiegTartalom;
     $HTMLkod        = '';
-    //$ErrorStr       = '';
-    
     if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!!  
+        
+       
+       //$ErrorStr       = '';
+        
+      
         $SelectStr = "SELECT * FROM KiegTartalom";
         $result = mysqli_query($MySqliLink, $SelectStr) OR die("Hiba sKTT 01");
 
@@ -121,9 +126,12 @@ function getKiegTForm() {
         $HTMLkod .= "<input type='submit' name='submitKiegTartalom' id='submitKiegTartalom' value='Módosítás'>\n";
         $HTMLkod .= "</form>\n";
         $HTMLkod .= "</div>\n";
-        return $HTMLkod;
+        
     }
+    return $HTMLkod;
 }
+
+
 
 function getKiegTHTML() {
     global $MySqliLink;
