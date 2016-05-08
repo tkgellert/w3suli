@@ -285,7 +285,7 @@ function getCikkKepForm() {
             $HTMLkod .=  "<input type='submit' name='submitCikkKepForm' value='Adatok módosítása' style='clear:left;'><br><br>\n";        
             $HTMLkod .= "</form></div>\n";
         }
-        $HTMLkod .= "</div> <br style='clear:left;'>\n";
+        $HTMLkod .= "</div>\n";
     }
     return $HTMLkod;
 }

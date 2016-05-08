@@ -338,7 +338,7 @@
             $HTMLkod .= "<input type='file' name='file' id='fileKepTolt' >";
             $HTMLkod .= "<input type='submit' name='submitKisKepTolt' id='submitKisKepTolt' value='Feltöltés'><br><br>";
             $HTMLkod .= "</form>\n";
-            $HTMLkod .= "<h2 style='float:none;'>Az oldal adatainak módosítása</h2><br> \n";
+            $HTMLkod .= "<h2>Az oldal adatainak módosítása</h2>\n";
             $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOldalForm'>\n";
             
             
@@ -699,7 +699,7 @@
               $HTMLkod .= "<div id='divOldalTorolForm' >\n";
               $HTMLkod .= "<form action='?f0=$OUrl' method='post' id='formOldalTorolForm'>\n"; 
               $HTMLkod .= "<p class='FontosStr'>Valóban töli a $ONev oldalt???!!! A művelet végleges!</p>";
-              $HTMLkod .=  "<br><input type='submit' name='submitOldalTorolForm' value='Törlés'><br>\n";        
+              $HTMLkod .= "<input type='submit' name='submitOldalTorolForm' value='Törlés'><br>\n";        
               $HTMLkod .= "</form>\n";
               $HTMLkod .= "</div>\n";
             }
@@ -760,17 +760,17 @@
         }
         if(isset($_POST['submitOldalForm'])) {$checked = " checked ";} else {$checked = "";}
         $HTMLFormkod  .= "  <input name='chOldalForm'   id='chOldalForm'   value='chOldalForm'   type='radio' $checked>\n";
-        $HTMLFormkod  .= "  <label for='chOldalForm'    class='chLabel'    id='labelOldalForm'>Oldal módosítása</label>\n";
+        $HTMLFormkod  .= "  <label for='chOldalForm'    class='chLabel'    id='labelOldalForm'>Oldal módosítás</label>\n";
         if(isset($_POST['submitOldalTorolForm']) || isset($_POST['submitOldalTorolVegleges'])) {$checked = " checked ";} else {$checked = "";}
         $HTMLFormkod  .= "  <input name='chOldalForm'   id='chOldalTorolForm'  value='chOldalTorolForm'  type='radio' $checked>\n";
-        $HTMLFormkod  .= "  <label for='chOldalTorolForm'   class='chLabel'    id='labelOldalTorolForm'>Oldal törlése</label>\n \n";
+        $HTMLFormkod  .= "  <label for='chOldalTorolForm'   class='chLabel'    id='labelOldalTorolForm'>Oldal törlés</label>\n \n";
         if(isset($_POST['submitOldalKepForm']) || isset($_POST['submit_KepekFeltoltForm'])) {$checked = " checked ";} else {$checked = "";}
         $HTMLFormkod  .= "  <input name='chOldalForm'   id='chOldalKepForm' value='chOldalKepForm'  type='radio' $checked>\n";
-        $HTMLFormkod  .= "  <label for='chOldalKepForm' class='chLabel'     id='labelOldalKepForm'>Oldal képeinek módosítása</label>\n \n";
+        $HTMLFormkod  .= "  <label for='chOldalKepForm' class='chLabel'     id='labelOldalKepForm'>Oldal képek</label>\n \n";
         
         if(isset($_POST['submitOModeratorValaszt']) || isset($_POST['submitOModeratorCsoportValaszt']) || isset($_POST['submitOModeratorCsoport'])) {$checked = " checked ";} else {$checked = "";}
         $HTMLFormkod  .= "  <input name='chOldalForm'   id='chOldalModeratorForm' value='chOldalModeratorForm'  type='radio' $checked>\n";
-        $HTMLFormkod  .= "  <label for='chOldalModeratorForm' class='chLabel'     id='labelOldalModeratorForm'>Oldal moderátorainak módosítása</label>\n \n";
+        $HTMLFormkod  .= "  <label for='chOldalModeratorForm' class='chLabel'     id='labelOldalModeratorForm'>Oldal moderátorok</label>\n \n";
         // ================ AZ OLDAL MÓDOSÍTSÁT VÉGZŐ FORMOK ====================================
         if ($DedSzuloId['id']==0) {$HTMLFormkod  .= getUjOldalForm();} //5. szintű oldal már nem hozható létre
         $HTMLFormkod  .= getOldalForm();

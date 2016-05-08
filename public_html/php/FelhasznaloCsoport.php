@@ -268,6 +268,7 @@ function getFCsoportForm() {
 	if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { // FSzint-et növelni, ha működik a felhasználókezelés!!! 
 		     
 		$HTMLkod .= getCsoportValasztForm();
+                $HTMLkod .= "<div id='divFormkodFCsoport'>";
 
 		if($_SESSION['SzerkFCsoport']>0)
 		{
@@ -382,6 +383,7 @@ function getFCsoportForm() {
 		$HTMLkod .= getUjFCsoportForm();
 		$HTMLkod .= getFCsoportTorolForm();
 
+                $HTMLkod .= "</div>";
 	}
 	return $HTMLkod;
 }    

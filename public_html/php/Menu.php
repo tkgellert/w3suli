@@ -19,6 +19,7 @@
             $HTMLkod1 .= "<li class='M1'><a href='?f0=kijelentkezes'>Kijelentkezés</a></li>\n";            
             $HTMLkod1 .= "<li class='M1'><a href='?f0=jelszomodositas'>Jelszómodosítás</a></li>\n";            
         } else {
+            $HTMLkod1 .= "<li class='M1'><div class='divMenuInfo1'>Felhasználói lehetőségek</div></li>\n"; 
             $HTMLkod1 .= "<li class='M1'><a href='?f0=bejelentkezes'>Bejelentkezés</a></li>\n";  
             
         }
@@ -28,27 +29,29 @@
         $HTMLkod2      = '';
         if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { 
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div>Felhasználókezelés</div>\n";             
+            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Felhasználókezelés</div></li>\n";             
             $HTMLkod2 .= "<li class='M1'><a href='?f0=regisztracio'>Regisztráció</a></li>\n"; 
             $HTMLkod2 .= "<li class='M1'><a href='?f0=adatmodositas'>Felhasználók szerkesztése</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=Felhasznaloi_csoportok'>Felhasználói csoportok</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=felhasznalo_lista'>Felhasználó lista</a></li>\n";
-            $HTMLkod2 .= "</li></ul>\n";     
+            $HTMLkod2 .= "</ul>\n";     
             
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div>Kiegészítő tartalmak</div>\n";             
+            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Kiegészítő tartalmak</div></li>\n";             
             $HTMLkod2 .= "<li class='M1'><a href='?f0=kiegeszito_tartalom'>Kiegészítő tartalom</a></li>\n";    
             $HTMLkod2 .= "<li class='M1'><a href='?f0=Fomenu_linkek_beallitasa'>Főmenü linkjeinek beállítása</a></li>\n"; 
             $HTMLkod2 .= "<li class='M1'><a href='?f0=menuplusz'>Menü plusz infók</a></li>\n";   
-            $HTMLkod2 .= "</li></ul>\n";  
+            $HTMLkod2 .= "</ul>\n";  
             
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div>Alapinformációk</div>\n";              
+            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Alapinformációk</div></li>\n";              
             $HTMLkod2 .= "<li class='M1'><a href='?f0=alapbeallitasok'>Alapbeállítások</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=oldalterkep'>Oldaltérkép</a></li>\n"; 
-            $HTMLkod2 .= "</li></ul>\n"; 
+            $HTMLkod2 .= "</ul>\n"; 
         }
+                    
         $HTMLkod2 .= "<div class='divMenuInfo1'>Tartalom</div>\n";
+        
         if ($HTMLkod2 != '') {$HTMLkod1 .= $HTMLkod2;}
         
         // ================ KATEGÓRIÁK ÉS HÍROLDALAK TÖBBSZINTŰ LISTÁJA ============================= 

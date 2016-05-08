@@ -557,6 +557,8 @@ function getFelhasznaloForm() {
         {
         $HTMLkod .= getFelhasznaloValasztForm();
         
+        $HTMLkod  .= "<div id='divFormkodFelhasznalo'>";
+        
             if($_SESSION['SzerkFelhasznalo']>0)
             {
                 // ============== FORM KIVÁLASZTÁSA ===================== 
@@ -743,6 +745,7 @@ function getFelhasznaloForm() {
 
             }
             $HTMLkod .=getFelhasznaloTorolForm();
+            $HTMLkod .="</div>";
         }	  
     }
     return $HTMLkod;	
