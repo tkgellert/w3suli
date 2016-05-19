@@ -171,7 +171,7 @@ function JSonLoad()
      <div id='Keret'> 
        <header id='FoHeder'>
 		   <a href="./" id="logoImgLink"><img src="img/ikonok/w3logo.png" alt="logó" title="Oldal neve" style="float:left;"></a>
-		   <a href="./" id="logoLink"><span>Nyílt forráskódú blog-motor projekt</span></a>
+		   <a href="./" id="logoLink"><span>Nyílt forráskódú</span> <br><span>blog-motor projekt</span></a>
 	   </header>
 	   <input name="chmenu" id="chmenu" value="chmenu" type="checkbox" style='display:none;'>
        <nav id='FoNav'> 
@@ -211,6 +211,13 @@ function JSonLoad()
         ga('send', 'pageview');
 
     </script>
+    
+    
+    <!-- Helyezd el ezt a címkét a head szakaszban vagy közvetlenül a záró body címke elé. -->
+    <script src="https://apis.google.com/js/platform.js" async defer>
+      {lang: 'hu'}
+    </script>
+
   </body>
 
 </html>
