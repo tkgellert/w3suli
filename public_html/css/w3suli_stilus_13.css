@@ -4,7 +4,17 @@ a#logoLink        {color:#222;}
 a#logoLink:hover  {color:#222;}
 a#logoLink:active {color:#222;}
 a#logoLink:link   {color:#222;}
-a#logoLink        {margin-left:10px; font-variant:small-caps; line-height:100px; font-weight:bold;}
+a#logoLink        {margin-left:10px; font-variant:small-caps; font-weight:bold;}
+
+
+/*--------------------HTML TAG-EK FORMÁZÁSA -------------------*/
+
+input{background-color:#CAD0E2; margin-top:5px; margin-bottom:5px;}
+textarea{background-color:#CAD0E2;}
+
+button{background-color:#CAD0E2;}
+
+form h2, form p{margin-top:10px;}
 
 /*---------------------- MORZSANAVIGÁCIÓ FORMÁZÁSA ----------------------*/
 
@@ -44,10 +54,9 @@ footer {background-color:#5C77B5; line-height:15px; font-weight:bold; padding-to
 #KiegeszitoInfo{margin-top:0; padding-top:0;}
 
 .divKiegTKulso{
-    padding-left:5px;
     margin-top:10px;
-    margin-right:3px;
-    margin-left:3px;
+    margin-right:5px;
+    margin-left:5px;
     margin-bottom:10px;
     
     background-color:#5C77B5;
@@ -66,6 +75,12 @@ footer {background-color:#5C77B5; line-height:15px; font-weight:bold; padding-to
     
     color:#222;
     font-family: "Istok Web",sans-serif;
+}
+
+.divKiegTKulso img, .divKiegTKulso iframe{
+    width:100%;
+    border:2px solid black;
+    border-radius: 5px 5px 5px 5px;
 }
 
 .divKiegT{margin:5px; color:#222; font-size:15px;}
@@ -161,22 +176,28 @@ width: calc(100% - 10px);}
 {width: 100%;}
 
 /* ---------------- GYŰJTŐDIV FORMÁZÁSA ---------------- */
-#divOTartalom h2{margin-top:10px; margin-bottom:10px;}
 
-#divFormkod, #divFormkodCikk, #divFormkodFCsoport, #divFormkodFelhasznalo{  
+/* #divFormkod, #divFormkodCikk, #divFormkodFCsoport, #divFormkodFelhasznalo{  
     background-color:#E9EAED;
     border:2px solid #4262A9;
     border-radius: 5px 5px 5px 5px;
-}
+}*/
 
-#divFormkodFCsoport h2 {margin-top:10px; margin-bottom:0px;}
+#divFormkod h2 {margin-top:10px; margin-bottom:10px;}
+#divFormkodCikk h2 {margin-top:10px; margin-bottom:10px;}
+#divFormkodFCsoport h2 {margin-top:10px; margin-bottom:10px;}
+#divCsoportValaszt h2 {margin-top:10px; margin-bottom:10px;}
+
+#divFormkod h3{margin-top:8px; margin-bottom:8px;}
+
+#divFormkod p {margin-top:10px; margin-bottom:0px;}
 #divFormkodFCsoport p {margin-top:10px; margin-bottom:10px;}
-#divFormkodFCsoport label {padding:2px;}
 
 
-#divFormkodFelhasznalo label {padding:2px;}
-#divFormkodCikk label        {padding:2px;}
-#divFormkod label            {padding:2px;}
+/*#divFormkodFCsoport label {padding:3px;}
+#divFormkodFelhasznalo label {padding:3px;}
+#divFormkodCikk label        {padding:3px;}
+#divFormkod label            {padding:3px;}*/
 
 .pCikkTorol{margin-top:0px; margin-bottom:5px;}
 
@@ -186,9 +207,22 @@ width: calc(100% - 10px);}
 #divFelhasznaloForm, #divFelhasznaloTorol{padding:10px;}
 
 #divOldalForm, #divUjOldalForm, #divOldalTorolForm, #divOldalKepForm, #divOldalModeratorForm, 
-#divUjCikkForm, #divCikkForm, #divCikkKepForm, #divCikkValaszt, #divCikkTorolForm, 
+#divUjCikkForm, #divCikkForm, #divCikkValaszt, #divCikkTorolForm, 
 #divFCsoportForm, #divFCsoportTorol, #divUjFCsoportForm, #divFelhasznaloForm, #divFelhasznaloTorol
-{background-color:#E9EAED; margin-top:0; padding-top:0; border:0px;}
+{background-color:#E9EAED; margin-top:0; padding:10px;
+border:2px solid black;}
+
+/* A cikk képei nincsenek közös DIV-ben, így ezt külön formázzuk */
+
+#divCikkKepForm{border:0; background-color:#E9EAED;}
+
+/* ---------------- FORM-ELVÁLASZTÓ FORMÁZÁSOK ---------------- */
+
+#divOModeratorCsoportValaszt, #divOModeratorValasztForm, #KepekFeltoltForm, 
+#KisKepFelForm, #CikkKepTolForm, #formCsoportValaszt, #formCsoportValaszt2, #formFelhasznaloValaszt 
+{border-bottom:2px solid black; width: 100%;}
+
+/* ---------------- -------------------------- ---------------- */
 
 .divKiegTElem, .divFoMenuElem, .divMenuPlElem{
     width:710px;
@@ -207,24 +241,3 @@ width: calc(100% - 10px);}
 
 #divOElozetesekKulso a,
 #divOTartalom .Ul1a a {color:royalblue;}
-
-
-input{background-color:#CAD0E2;}
-textarea{background-color:#CAD0E2;}
-
-button{background-color:#CAD0E2;}
-
-
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-/*---------------------- FELBONTÁSHOZ KÖTÖTT FORMÁZÁSOK -----------------------*/
-/*-----------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------*/
-
-
-@media screen and (max-width:1340px) 
-{
-    .divCikkKulso {
-        width:500px;
-    }
-}
