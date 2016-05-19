@@ -157,7 +157,7 @@ function getOModeratorCsoportValasztForm(){
         }	
         //Submit
         $HTMLkod .= "<input type='submit' name='submitOModeratorCsoportValaszt' value='Kiválaszt'><br>\n";        
-        $HTMLkod .= "</form>\n";            
+        $HTMLkod .= "</form>\n<br>";            
         $HTMLkod .= "</div>\n";    
     }     
     return $HTMLkod;   

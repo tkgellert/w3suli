@@ -292,7 +292,7 @@ function setOldalKepFeltolt() {
         $HTMLkod .= "<h2>Képek adatainak módosítása</h2>\n";
         $HTMLkod .= $HTMLkod1;
         
-        $HTMLkod .=  "<br><br><br><br><br><br><input type='submit' name='submitOldalKepForm' value='Elküld'><br><br>\n";        
+        $HTMLkod .=  "<br><br><br><br><br><br><input type='submit' name='submitOldalKepForm' value='Elküld'><br>\n";        
         $HTMLkod .= "</form></div>\n";
         $HTMLkod .= "</div>\n";
         return $HTMLkod;

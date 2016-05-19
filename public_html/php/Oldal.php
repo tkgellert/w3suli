@@ -370,7 +370,7 @@
 
         
             //Láthatóság
-            $HTMLkod .= "<div id='divOLathatosag'><h2>Láthatóság:</h2>";
+            $HTMLkod .= "<div id='divOLathatosag'><h3>Láthatóság:</h3>";
             
             if($OLathatosag==0){$checked=" checked ";}else{$checked="";}
             $HTMLkod .="<input type='radio' id='OLathatosag_0' name='OLathatosag' value='0' $checked>";
@@ -402,7 +402,7 @@
               rows='8' cols='100' >".$OTartalom."</textarea></p>\n";
             
             //Submit
-            $HTMLkod .=  "<br><input type='submit' name='submitOldalForm' value='Módosítás'><br>\n";        
+            $HTMLkod .= "<input type='submit' name='submitOldalForm' value='Módosítás'><br>\n";        
             $HTMLkod .= "</form>\n";
             $HTMLkod .= "</div>\n";
           } 
@@ -738,7 +738,7 @@ function setOldalTorol() {
               $HTMLkod .= "<p class='FontosStr'>Valóban töli a <u>$ONev</u> oldalt?</p>";
               $HTMLkod .= "<p class='FontosStr'>A művelet végleges!</p>";  
               $HTMLkod .= "<p class='FontosStr'>Törlődnek az oldal cikkei is.</p>";               
-              $HTMLkod .=  "<br><input type='submit' name='submitOldalTorolForm' value='Törlés'><br>\n";        
+              $HTMLkod .= "<input type='submit' name='submitOldalTorolForm' value='Törlés'><br>\n";        
               $HTMLkod .= "</form>\n";
               $HTMLkod .= "</div>\n";
             }
