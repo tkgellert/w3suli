@@ -4,13 +4,14 @@
     }
 
     function getMenuHTML() {
-        global $Aktoldal, $SzuloOldal, $NagyszuloOldal, $MySqliLink, $DedSzuloId;
+        global $Aktoldal, $SzuloOldal, $NagyszuloOldal, $MySqliLink, $DedSzuloId, $AlapAdatok;
          $HTMLkod1 = '';
          
-        $HTMLkod1 = '
+        if ($AlapAdatok['GooglePlus']==1){ 
+            $HTMLkod1 = '
             <!-- Helyezd el ezt a címkét ott, ahol a(z) +1 gomb modult meg szeretnéd jeleníteni. -->
-            <div id="Gplusz" style="width:100%;text-align:center;margin-top:4px;"><div class="g-plusone"></div></div>
-        ';
+            <div id="Gplusz" style="width:100%;text-align:center;margin-top:4px; height:31px;"><div class="g-plusone"></div></div>
+            ';}
          
         // ================ FELHASZNÁLÓ ÜDVÖZLÉSE ============================= 
         if ($_SESSION['AktFelhasznalo'.'FSzint']>1)  {             
@@ -25,7 +26,6 @@
             $HTMLkod1 .= "<li class='M1'><a href='?f0=kijelentkezes'>Kijelentkezés</a></li>\n";            
             $HTMLkod1 .= "<li class='M1'><a href='?f0=jelszomodositas'>Jelszómodosítás</a></li>\n";            
         } else {
-            $HTMLkod1 .= "<li class='M1'><div class='divMenuInfo1'>Felhasználói lehetőségek</div></li>\n"; 
             $HTMLkod1 .= "<li class='M1'><a href='?f0=bejelentkezes'>Bejelentkezés</a></li>\n";  
             
         }
@@ -35,7 +35,7 @@
         $HTMLkod2      = '';
         if ($_SESSION['AktFelhasznalo'.'FSzint']>3)  { 
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Felhasználókezelés</div></li>\n";             
+            $HTMLkod2 .= "<li class='M1'><div>Felhasználókezelés</div></li>\n";             
             $HTMLkod2 .= "<li class='M1'><a href='?f0=regisztracio'>Regisztráció</a></li>\n"; 
             $HTMLkod2 .= "<li class='M1'><a href='?f0=adatmodositas'>Felhasználók szerkesztése</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=Felhasznaloi_csoportok'>Felhasználói csoportok</a></li>\n";
@@ -43,19 +43,20 @@
             $HTMLkod2 .= "</ul>\n";     
             
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Kiegészítő tartalmak</div></li>\n";             
+            $HTMLkod2 .= "<li class='M1'><div>Kiegészítő tartalmak</div></li>\n";             
             $HTMLkod2 .= "<li class='M1'><a href='?f0=kiegeszito_tartalom'>Kiegészítő tartalom</a></li>\n";    
             $HTMLkod2 .= "<li class='M1'><a href='?f0=Fomenu_linkek_beallitasa'>Főmenü linkjeinek beállítása</a></li>\n"; 
             $HTMLkod2 .= "<li class='M1'><a href='?f0=menuplusz'>Menü plusz infók</a></li>\n";   
             $HTMLkod2 .= "</ul>\n";  
             
             $HTMLkod2 .= "<ul class='Ul1'>\n";
-            $HTMLkod2 .= "<li class='M1'><div class='divMenuInfo1'>Alapinformációk</div></li>\n";              
+            $HTMLkod2 .= "<li class='M1'><div>Alapinformációk</div></li>\n";              
             $HTMLkod2 .= "<li class='M1'><a href='?f0=alapbeallitasok'>Alapbeállítások</a></li>\n";
             $HTMLkod2 .= "<li class='M1'><a href='?f0=oldalterkep'>Oldaltérkép</a></li>\n"; 
             $HTMLkod2 .= "</ul>\n"; 
+            
+            $HTMLkod2 .= "<div class='divMenuInfo1'>Tartalom</div>\n";
         }
-        $HTMLkod2 .= "<div class='divMenuInfo1'>Tartalom</div>\n";
         if ($HTMLkod2 != '') {$HTMLkod1 .= $HTMLkod2;}
         
         // ================ KATEGÓRIÁK ÉS HÍROLDALAK TÖBBSZINTŰ LISTÁJA ============================= 
