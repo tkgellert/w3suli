@@ -1,12 +1,40 @@
 <?php
 
 
-    function setKepFeltolt($AktKonytart,$KFileName) {
+function getTisztaURL(){
+    if(isset($_SERVER['HTTPS'])){
+        $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+    }
+    else{
+        $protocol = 'http';
+    }
+    $request1 = '';
+    if (isset($_GET['f0']) && $_GET['f0']!='') {$request1 .= '?f0='.test_post($_GET['f0']);}
+    if (isset($_GET['lap']) && $_GET['lap']>1) {$request1 .= '&amp;lap='.INT_post($_GET['lap']);}
+    $path = $_SERVER['REQUEST_URI'];
+    if (strpos($path,"?f0=")>0) { $path = substr($path,0, strpos($path,"?f0="));}
+    
+    return $protocol . "://" . $_SERVER['HTTP_HOST']. $path. $request1;
+}
+
+function getRootURL() {
+    if(isset($_SERVER['HTTPS'])){
+        $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+    }
+    else{
+        $protocol = 'http';
+    }    
+    return $protocol . "://" .$_SERVER['HTTP_HOST'];    
+}
+
+
+function setKepFeltolt($AktKonytart,$KFileName) {    
+    if (isset($_FILES["file"]) && $_FILES["file"]["name"]!='') { 
       $UploadErr   = '';
       $allowedExts = array("gif", "jpeg", "jpg", "png", "JPG", "JPEG");
       $temp        = explode(".", $_FILES["file"]["name"]); 
       $extension   = end($temp);
-      if ((($_FILES["file"]["type"] == "image/gif")
+      if ((($_FILES["file"]["type"]   == "image/gif")
         || ($_FILES["file"]["type"]   == "image/jpeg")
         || ($_FILES["file"]["type"]   == "image/jpg")
         || ($_FILES["file"]["type"]   == "image/pjpeg")
@@ -16,24 +44,37 @@
         && in_array($extension, $allowedExts))
       {
         if ($_FILES["file"]["error"] > 0) {
-          $UploadErr = "Err01: " . $_FILES["file"]["error"] . "<br>"; 
+          $UploadErr = "ErrK02 " . $_FILES["file"]["name"]; 
         } else {
-          $CelFilename =   $AktKonytart.$KFileName.'.'.$extension;
+          $CelFilename =   $AktKonytart.$KFileName.'.'.$extension; 
           if (file_exists($CelFilename)) {
-            //Meglévő kép felülírása
-            move_uploaded_file($_FILES["file"]["tmp_name"],$CelFilename);
-            $UploadErr =  $KFileName.'.'.$extension; 
-          } else {
+            if (!@unlink($CelFilename)) {
+                $UploadErr = 'ErrK02'.$_FILES["file"]["name"]."<br>"; // Nem sikerült a törlés
+            } else {  
+                //Meglévő kép felülírása
+                if (move_uploaded_file($_FILES["file"]["tmp_name"],$CelFilename)) {
+                    $UploadErr =  $KFileName.'.'.$extension; 
+                } else {
+                    $UploadErr .= "ErrK05".$_FILES["file"]["name"]."<br>";                     
+                }
+            }
+          } else { 
             //Új kép feltöltése
-            move_uploaded_file($_FILES["file"]["tmp_name"],$CelFilename);
-            $UploadErr =  $KFileName.'.'.$extension; 
+            if (move_uploaded_file($_FILES["file"]["tmp_name"],$CelFilename)) {
+              $UploadErr =  $KFileName.'.'.$extension; 
+            } else {
+              $UploadErr .= "ErrK05".$_FILES["file"]["name"]."<br>";                     
+            }
           }
         }
       } else {
-        if ($_FILES["file"]["name"] >'') {$UploadErr = "Err02";}
+        if ($_FILES["file"]["name"] >'') {$UploadErr = "ErrK01 ".$KFileName.'.'.$extension;}
       }
-      return $UploadErr;;
-    }
+    } else {
+        $UploadErr = "ErrK00 ";       
+    }  
+    return $UploadErr;;
+}
 
 
     function setKepekFeltolt() {       
@@ -41,7 +82,7 @@
     }
 
     function getTXTtoURL($txt) {
-        $arr = array(' ' => '_', ',' => '_',  ';' => '',  '"' => '',  "'" => '',  ':' => '',  '  ' => ' ', 'á' => 'a', 'Á' => 'A', 
+        $arr = array(' ' => '_', ',' => '_',  ';' => '',  '"' => '',  "'" => '',  ':' => '',  '  ' => '__', '   ' => '___', 'á' => 'a', 'Á' => 'A', 
                'é' => 'e', 'É' => 'e', 'ó' => 'o', 'Ó' => 'O', 'í' => 'i', 'Í' => 'I', 'Ú' => 'U', 'ú' => 'u', 'Ö' => 'O', 
                'ö' => 'o', 'Ő' => 'O', 'ő' => 'o', 'Ü' => 'U', 'ü' => 'u', 'Ű' => 'U', 'ű' => 'u', '.' => '_', "\x5C" => "", 
                "/" => "", '|' => '', '?' => '', '*' => '', '\\' => '', ':' => '', '<' => '', '<' => '>');  
@@ -64,10 +105,20 @@
    function test_post($data) {
      global $MySqliLink;
      $data = trim($data);
-     $arr = array( "'" => "&apos;", '"' => "&quot;", '”' => "&quot;", ":" => "&#58;", "<" => "&lt;", ">" => "&gt;",   "=" => "&#61;", "\x5C" => "" );
-     $data  = strtr($data, $arr);
+     $arr  = array( "'" => "&apos;", '"' => "&quot;", '”' => "&quot;", ":" => "&#58;", "  " => " ", "   " => " ",
+                    "<" => "&lt;", ">" => "&gt;",   "=" => "&#61;", "\x5C" => "" );
+     $data = strtr($data, $arr);
      $data = mysqli_real_escape_string($MySqliLink, $data);
    return $data;
+   }
+   
+   function test_post1($data) {
+     global $MySqliLink;
+     $data = trim($data);
+     $arr  = array( "'" => "&apos;", '"' => "&quot;", '”' => "&quot;", ":" => "&#58;", "  " => " ", "   " => " ",
+                    "<" => "&lt;", ">" => "&gt;",   "=" => "&#61;", "\x5C" => "" );
+     $data  = strtr($data, $arr);
+   return;
    }
    
    function SQL_post($data) {
@@ -108,7 +159,6 @@
 function SzintaxisCsere($str){ 
 
  // echo $str1;
-
   $str1 = ListaCsere($str)."\n\n";
   $str1 = TablaCserePlusz($str1)."\n\n";
 
@@ -170,22 +220,25 @@ function SzintaxisCsereElozetes($str){
 //=========================================================================================================================
 
 function LinkCsere($str){
-  $strtomb=explode('[',$str);  
-  $HSzint = 0;
-  $str1 = '';
-  $str2 = '';
+  $strtomb = explode('[',$str);  
+  $HSzint  = 0;
+  $str1    = '';
+  $str2    = '';
   foreach ($strtomb as $SOR) {
-    if ((strpos($SOR,"]")>0) && (strpos($SOR,"http")===0)) {
-      $stra = substr($SOR,0, strpos($SOR,"]"));
-      $strb = substr($SOR,strpos($SOR,"]")+1);
+    if ((strpos($SOR,"]")>0) && ((strpos($SOR,"http")===0) || (strpos($SOR,"?f0=")===0))) {
+        $stra = substr($SOR,0, strpos($SOR,"]"));
+        $strb = substr($SOR,strpos($SOR,"]")+1);
  
-      if (strpos($stra,"|")>0) {
-        $LinkTomb=explode('|',$stra);  
-        if (strpos($LinkTomb[0],"matrac.gtportal.eu")>0) {$Blank = '';} else {$Blank = 'target="_blank"';}
-        $str1 .= '<a href="'.$LinkTomb[0].'" rel="nofollow"  '.$Blank.' >'.$LinkTomb[1].'</a>'.$strb; 
-      } else {
-		if (strpos($stra,"matrac.gtportal.eu")>0) {$Blank = '';} else {$Blank = 'target="_blank"';}  
-		$str1 .= '<a href="'.$stra.'" rel="nofollow"  '.$Blank.' >'.$stra.'</a>'.$strb;}
+        if (strpos($stra,"|")>0) {
+            $LinkTomb=explode('|',$stra);  
+            if (strpos($LinkTomb[0],$_SERVER['HTTP_HOST'])>0)  {$Blank = ''; $rel='';} else {$Blank = 'target="_blank"'; $rel='rel="nofollow"';}
+            $str1 .= "<a href='".$LinkTomb[0]."' $rel  $Blank >".$LinkTomb[1]."</a>".$strb; 
+        } else {
+            if (strpos($stra,$_SERVER['HTTP_HOST'])>0) {$Blank = ''; $rel='';} else {$Blank = 'target="_blank"'; $rel='rel="nofollow"';}  
+           // $str1 .= '<a href="'.$stra.'" rel="nofollow"  '.$Blank.' >'.$stra.'</a>'.$strb;
+            $str1 .= "<a href='$stra' $rel  $Blank >$Blank</a>".$strb; 
+            
+        }
     } else {$str1 .= $SOR;}
   }
   return $str1;
@@ -309,21 +362,27 @@ function SuperCsere($str,$compStr,$CsereTagEleje,$CsereTagVege){
 // A nyitó előtt kötelező, a záró után nem lehet szóköz 
 //=========================================================================================================================
 function ItalicCsere($str){   
-  $strtomb=explode('_',$str);  
-  $TombHossz=Count($strtomb);
+  $strtomb     = explode('_',$str);  
+  $TombHossz   = Count($strtomb);
   $ItalicSzint = 0;
-  $str1 = $strtomb[0];
+  $str1        = $strtomb[0];
   for ($i=1;$i<$TombHossz-1;$i++) {
     $AktStr = $strtomb[$i];   $AktHossz = strlen($AktStr); if ($AktHossz>0) {$AktUtolso = $AktStr[$AktHossz-1];} else {$AktUtolso = '';}  
     $KovStr = $strtomb[$i+1]; $KovHossz = strlen($KovStr); if ($KovHossz>0) {$KovUtolso = $KovStr[$KovHossz-1];} else {$KovUtolso = '';} 
     $EloStr = $strtomb[$i-1]; $EloHossz = strlen($EloStr); if ($EloHossz>0) {$EloUtolso = $EloStr[$EloHossz-1];} else {$EloUtolso = '';}
+    $Dupla_ = 0;
+    if ($i>1) {if ((strlen($EloStr)==0)&&(strlen($strtomb[$i-2]))) {$Dupla_ = 1;} }
 //Első tag
   if ($ItalicSzint == 0 ) {
-  if (($AktStr>'') && ($i > 0) && ($AktStr[0]!==' ') && 
-      (($KovStr[0]==' ') || ($KovStr[0]=='*') || ($KovStr[0]=='^') || ($KovStr[0]=='~')  || ($KovStr[0]==',') || ($KovStr[0]=='<') || ($KovStr[0]=="\x0D") ||  ($KovStr[0]=="\x0A") ||  ($KovHossz == 0)) && 
-       (($EloUtolso == ' ') || ($EloUtolso == '*') || ($EloUtolso == '^') || ($EloUtolso == '~')  || ($EloUtolso == ',')  ||  ($EloUtolso == '>')  || 
-        ($EloUtolso == "\x0D")  || ($EloUtolso == "\x0A") || ($EloHossz == 0))) 
-        {$str1.='<i>'.$AktStr; $ItalicSzint = 1;}  else { if ($AktStr>'') { if ($i > 0) {$str1.='_'.$AktStr;} else  {$str1.=$AktStr;} }}
+    if (($AktStr>'') && ($i > 0) && ($AktStr[0]!==' ') && ($Dupla_ == 0) &&
+        (($KovStr[0]==' ') || ($KovStr[0]=='*') || ($KovStr[0]=='^') || ($KovStr[0]=='~')  || ($KovStr[0]==',') || ($KovStr[0]=='<') || ($KovStr[0]=="\x0D") ||  ($KovStr[0]=="\x0A") ||  ($KovHossz == 0)) && 
+         (($EloUtolso == ' ') || ($EloUtolso == '*') || ($EloUtolso == '^') || ($EloUtolso == '~')  || ($EloUtolso == ',')  ||  ($EloUtolso == '>')  || 
+          ($EloUtolso == "\x0D")  || ($EloUtolso == "\x0A") || ($EloHossz == 0))) 
+          {$str1.='<i>'.$AktStr; $ItalicSzint = 1; }  
+    else { 
+             // if ($AktStr>'') { if ($i > 0) {$str1.='_'.$AktStr;} else  {$str1.=$AktStr;} }
+               if ($i > 0) {$str1.='_'.$AktStr;} else  {$str1.=$AktStr;} 
+         }
    } else {
 //Második tag
      if ((($AktStr>'') && (($AktStr[0] ==' ') || ($AktStr[0]=='<')  || ($AktStr[0] =='*')  || ($AktStr[0] =='^') || ($AktStr[0] =='~')  || ($AktStr[0] ==',')  || ($AktStr[0] =="\x0D") || ($AktStr[0] =="\x0A") ) && 
@@ -671,7 +730,7 @@ function getElsoKepHTML($Cid,$KepUtvonal) {
     if ($rowDB > 0) {
         $row     = mysqli_fetch_array($result);  mysqli_free_result($result); 
         $Src     = $KepUtvonal.$row['KFile'];
-        $Alt     = $row['KNev'];
+        $KNev    = $row['KNev'];
         $HTMLkod.= "<img src='$Src'  class = 'imgOE' alt='$KNev'>";
     }
     return $HTMLkod;    
