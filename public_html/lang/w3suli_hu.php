@@ -331,8 +331,8 @@ define("U_SETUP_ABUZI2",       "Az adatbázis kapcsolódási adatai később csa
 define("U_SETUP_ROOTADATOK",   "A kiemelt rendszergazda adatai",TRUE);
 define("U_SETUP_ROOTNEV",      "A kiemelt rendszergazda neve",TRUE);
 define("U_SETUP_ROOTFNEV",     "A kiemelt rendszergazda felhasználói neve",TRUE);
-define("U_SETUP_ROOTJELSZO",   "Az adatbázis jelszava",TRUE);
-define("U_SETUP_ROOTJELSZO2",  "Az adatbázis jelszava ismét",TRUE);
+define("U_SETUP_ROOTJELSZO",   "A kiemelt rendszergazda jelszava",TRUE);
+define("U_SETUP_ROOTJELSZO2",  "A kiemelt rendszergazda jelszava ismét",TRUE);
 define("U_SETUP_ROOTUZI",      "A kiemelt rendszergazda  szerkesztheti az oldalak tartalmát, "
                               ."a webhely valamennyi beállítását.",TRUE);
 define("U_SETUP_STARTUZI",     "Az adatok módosítása esetén a 'START' gombra kattintva újratelepítheti a szoftvert.",TRUE);
